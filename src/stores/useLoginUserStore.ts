@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { getLoginUserUsingGet } from '@/api/userController.ts'
 
 //定义存储用户登录信息的store状态
 export const useLoginUserStore = defineStore('loginUser', () => {
@@ -8,18 +9,22 @@ export const useLoginUserStore = defineStore('loginUser', () => {
   })
 
   /**
-   * 获取登录用户
+   * 远程获取登录用户信息
    */
   async function fetchLoginUser() {
-    //TODO:后端还没写, 先写死
+    //
+    const res = await getLoginUserUsingGet()
+    if (res.data.code === 0 && res.data.data) {
+      loginUser.value = res.data.data
+    }
     // return loginUser.value
-    //5秒钟后,假设登录成功
-      setTimeout(() => {
-        loginUser.value = {
-          username: 'admin',
-          id: 1,
-        }
-      }, 5000)
+    // //5秒钟后,假设登录成功
+    //   setTimeout(() => {
+    //     loginUser.value = {
+    //       username: 'admin',
+    //       id: 1,
+    //     }
+    //   }, 5000)
   }
 
   /**

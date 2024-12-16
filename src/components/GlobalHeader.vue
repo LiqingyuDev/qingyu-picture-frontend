@@ -19,12 +19,40 @@
       </a-col>
       <a-col flex="120px">
         <div class="user-login-status">
-
           <div v-if="loginUserStore.loginUser.id">
-            {{ loginUserStore.loginUser.username ?? '默认昵称' }}
+            <a-dropdown>
+              <a class="ant-dropdown-link" @click.prevent>
+                <a-avatar
+                  :size="40"
+                  :src="
+                    loginUserStore.loginUser.userAvatar || 'https://aliyuncdn.antdv.com/vue.png'
+                  "
+                />
+                {{ loginUserStore.loginUser.userName ?? '默认昵称' }}
+
+                <DownOutlined />
+              </a>
+              <template #overlay>
+                <a-menu>
+                  <a-button type="default" style="width: 100%" @click="doLogout" danger
+                    >注销
+                    <LogoutOutlined />
+                  </a-button>
+                </a-menu>
+              </template>
+            </a-dropdown>
           </div>
-          <div v-else>
-            <a-button type="primary" href="/user/register">登录</a-button>
+
+          <div
+            v-else-if="
+              router.currentRoute.value.path !== '/user/login' &&
+              router.currentRoute.value.path !== '/user/register'
+            "
+          >
+            <a-button type="primary" href="/user/register">
+              <LoginOutlined />
+              登录
+            </a-button>
           </div>
         </div>
       </a-col>
@@ -42,13 +70,37 @@ import {
   SettingOutlined,
 } from '@ant-design/icons-vue'
 // @ts-ignore
-import { MenuProps } from 'ant-design-vue'
+import { MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
+
+import {
+  DownOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+  PictureOutlined,
+  TeamOutlined,
+} from '@ant-design/icons-vue'
 
 const router = useRouter()
 
 const doMenuClick = ({ key }: any) => {
   router.push({ path: key })
+}
+// 注销
+const doLogout = async () => {
+  const res = await userLogoutUsingPost()
+  if (res.data.code === 0) {
+    message.success('退出登录成功')
+    loginUserStore.setLoginUser({
+      userName: '未登录',
+    })
+    await router.push({
+      path: '/user/login',
+      replace: true,
+    })
+  } else {
+    message.error('退出登录失败' + res.data.message)
+  }
 }
 // 钩子,监听路由变化
 const current = ref<string[]>(['/'])
@@ -57,6 +109,7 @@ router.afterEach((to, from, next) => {
   current.value = [to.path]
 })
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
+import { userLogoutUsingPost } from '@/api/userController.ts'
 
 const loginUserStore = useLoginUserStore()
 const items = ref<MenuProps['items']>([
@@ -72,6 +125,20 @@ const items = ref<MenuProps['items']>([
     icon: () => h(CrownOutlined),
     label: '管理',
     title: '管理',
+    children: [
+      {
+        key: '/admin/user',
+        icon: () => h(TeamOutlined),
+        label: '用户管理',
+        title: '用户管理',
+      },
+      {
+        key: '/admin/pictureManager',
+        icon: () => h(PictureOutlined),
+        label: '图片管理',
+        title: '图片管理',
+      },
+    ],
   },
   {
     key: '/setting',
