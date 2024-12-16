@@ -29,27 +29,25 @@
                   "
                 />
                 {{ loginUserStore.loginUser.userName ?? '默认昵称' }}
-
                 <DownOutlined />
               </a>
               <template #overlay>
                 <a-menu>
-                  <a-button type="default" style="width: 100%" @click="doLogout" danger
-                    >注销
+                  <a-button type="default" style="width: 100%" @click="doLogout" danger>
+                    注销
                     <LogoutOutlined />
                   </a-button>
                 </a-menu>
               </template>
             </a-dropdown>
           </div>
-
           <div
             v-else-if="
               router.currentRoute.value.path !== '/user/login' &&
               router.currentRoute.value.path !== '/user/register'
             "
           >
-            <a-button type="primary" href="/user/register">
+            <a-button type="primary" href="/user/login">
               <LoginOutlined />
               登录
             </a-button>
@@ -61,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { h, ref } from 'vue'
+import { h, ref, computed } from 'vue'
 import {
   InfoCircleOutlined,
   GithubOutlined,
@@ -86,6 +84,7 @@ const router = useRouter()
 const doMenuClick = ({ key }: any) => {
   router.push({ path: key })
 }
+
 // 注销
 const doLogout = async () => {
   const res = await userLogoutUsingPost()
@@ -102,24 +101,27 @@ const doLogout = async () => {
     message.error('退出登录失败' + res.data.message)
   }
 }
+
 // 钩子,监听路由变化
 const current = ref<string[]>(['/'])
-//更新高亮菜单
+
+// 更新高亮菜单
 router.afterEach((to, from, next) => {
   current.value = [to.path]
 })
+
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { userLogoutUsingPost } from '@/api/userController.ts'
 
 const loginUserStore = useLoginUserStore()
-const items = ref<MenuProps['items']>([
+
+const originItems = [
   {
     key: '/',
     icon: () => h(HomeOutlined),
     label: '首页',
     title: '首页',
   },
-
   {
     key: '/admin',
     icon: () => h(CrownOutlined),
@@ -158,8 +160,28 @@ const items = ref<MenuProps['items']>([
     label: h('a', { href: 'https://www.antdv.com' }, 'Github'),
     title: '其他',
   },
-])
+]
+
+// 过滤菜单项
+const filterMenus = (menus: MenuProps['items'] = []) => {
+  return menus.filter((menu) => {
+    if (menu) { // 检查 menu 是否为 null 或 undefined
+      if (typeof menu.key === 'string' && menu.key.startsWith('/admin')) {
+        const loginUser = loginUserStore.loginUser
+        if (!loginUser || loginUser.userRole !== 'admin') {
+          return false
+        }
+      }
+      return true
+    }
+    return false
+  })
+}
+
+// 展示在菜单的路由数组
+const items = computed<MenuProps['items']>(() => filterMenus(originItems))
 </script>
+
 <style scoped>
 #globalHeader .title-bar {
   display: flex;
