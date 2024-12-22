@@ -143,6 +143,13 @@ const originItems = [
     ],
   },
   {
+    key: '/add_picture',
+    icon: () => h(PictureOutlined),
+    label: '创建图片',
+    title: '创建图片',
+  },
+
+  {
     key: '/setting',
     icon: () => h(SettingOutlined),
     label: '设置',
@@ -165,7 +172,8 @@ const originItems = [
 // 过滤菜单项
 const filterMenus = (menus: MenuProps['items'] = []) => {
   return menus.filter((menu) => {
-    if (menu) { // 检查 menu 是否为 null 或 undefined
+    if (menu) {
+      // 检查 menu 是否为 null 或 undefined
       if (typeof menu.key === 'string' && menu.key.startsWith('/admin')) {
         const loginUser = loginUserStore.loginUser
         if (!loginUser || loginUser.userRole !== 'admin') {
