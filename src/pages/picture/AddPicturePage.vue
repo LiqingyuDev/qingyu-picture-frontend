@@ -11,79 +11,78 @@
         </a-card>
       </a-col>
       <!-- 图片信息区 -->
-      <a-col :sm=" 24
-          " :md="8" :xl="6">
-          <a-card title="图片信息">
-            <!--    表单-->
-            <a-form
-              v-if="picture"
-              class="edit-form"
-              layout="vertical"
-              :model="pictureForm"
-              @finish="handleSubmit"
-              style="margin-bottom: 16px"
-            >
-              <!-- 图片名输入框 -->
-              <a-form-item label="图片名" name="picName">
-                <a-input v-model:value="pictureForm.picName" placeholder="请输入图片名" allow-clear />
-              </a-form-item>
+      <a-col :sm="24" :md="8" :xl="6">
+        <a-card title="图片信息">
+          <!--    表单-->
+          <a-form
+            v-if="picture"
+            class="edit-form"
+            layout="vertical"
+            :model="pictureForm"
+            @finish="handleSubmit"
+            style="margin-bottom: 16px"
+          >
+            <!-- 图片名输入框 -->
+            <a-form-item label="图片名" name="picName">
+              <a-input v-model:value="pictureForm.picName" placeholder="请输入图片名" allow-clear />
+            </a-form-item>
 
-              <!-- 类别输入框 -->
-              <a-form-item label="类别" name="category">
-                <a-auto-complete
-                  v-model:value="pictureForm.category"
-                  placeholder="请选择类别"
-                  :options="categoryOptions"
-                  allow-clear
-                />
-              </a-form-item>
+            <!-- 类别输入框 -->
+            <a-form-item label="类别" name="category">
+              <a-auto-complete
+                v-model:value="pictureForm.category"
+                placeholder="请选择类别"
+                :options="categoryOptions"
+                allow-clear
+              />
+            </a-form-item>
 
-              <!-- 简介输入框 -->
-              <a-form-item label="简介" name="introduction">
-                <a-textarea
-                  v-model:value="pictureForm.introduction"
-                  placeholder="请输入简介"
-                  allow-clear
-                  :auto-size="{ minRows: 2, maxRows: 4 }"
-                />
-              </a-form-item>
+            <!-- 简介输入框 -->
+            <a-form-item label="简介" name="introduction">
+              <a-textarea
+                v-model:value="pictureForm.introduction"
+                placeholder="请输入简介"
+                allow-clear
+                :auto-size="{ minRows: 2, maxRows: 4 }"
+              />
+            </a-form-item>
 
-              <!-- 标签输入框 -->
-              <a-form-item label="标签" name="tags">
-                <a-select
-                  mode="tags"
-                  v-model:value="pictureForm.tags"
-                  placeholder="请选择标签，用回车分隔"
-                  :options="tagOptions"
-                  allow-clear
-                />
-              </a-form-item>
+            <!-- 标签输入框 -->
+            <a-form-item label="标签" name="tags">
+              <a-select
+                mode="tags"
+                v-model:value="pictureForm.tags"
+                placeholder="请选择标签，用回车分隔"
+                :options="tagOptions"
+                allow-clear
+              />
+            </a-form-item>
 
-              <!-- 操作按钮 -->
-              <a-form-item class="edit-button">
-                <!-- 搜索按钮 -->
-                <a-button type="primary" html-type="submit" style="width: 100%; margin-top: 32px">
-                  <template #icon>
-                    <SearchOutlined />
-                  </template>
-                  提交
-                </a-button>
+            <!-- 操作按钮 -->
+            <a-form-item class="edit-button">
+              <!-- 搜索按钮 -->
+              <a-button type="primary" html-type="submit" style="width: 100%; margin-top: 32px">
+                <template #icon>
+                  <SearchOutlined />
+                </template>
+                提交
+              </a-button>
 
-                <!-- 重置按钮 -->
-                <a-button
-                  type="default"
-                  @click="doReset"
-                  style="width: 100%; margin-top: 16px"
-                  danger
-                >
-                  <template #icon>
-                    <ReloadOutlined />
-                  </template>
-                  重置
-                </a-button>
-              </a-form-item>
-            </a-form>
-          </a-card>
+              <!-- 重置按钮 -->
+              <a-button
+                type="default"
+                @click="doReset"
+                style="width: 100%; margin-top: 16px"
+                danger
+              >
+                <template #icon>
+                  <ReloadOutlined />
+                </template>
+                重置
+              </a-button>
+            </a-form-item>
+          </a-form>
+        </a-card>
       </a-col>
     </a-row>
   </div>
@@ -95,7 +94,7 @@ import { message } from 'ant-design-vue'
 import {
   editPictureUsingPost,
   getPictureVoByIdUsingGet,
-  listPictureTagCategoryUsingGet
+  listPictureTagCategoryUsingGet,
 } from '@/api/pictureController.ts'
 import { ReloadOutlined, SearchOutlined } from '@ant-design/icons-vue'
 
@@ -122,13 +121,13 @@ const handleSubmit = async (values: any) => {
   try {
     const res = await editPictureUsingPost({
       ...pictureForm.value,
-      id: pictureId
+      id: pictureId,
     })
     if (res.data.code === 0 && res.data.data) {
       message.success('编辑成功')
       //跳转到详情页
       router.push({
-        path: `/picture/${pictureId}`
+        path: `/picture/${pictureId}`,
       })
     } else {
       message.error('编辑失败,' + res.data.message)
@@ -146,7 +145,7 @@ const doReset = () => {
     id: undefined,
     introduction: '',
     picName: '',
-    tags: []
+    tags: [],
   }
 }
 
@@ -168,13 +167,13 @@ const listPictureTagCategoryCategory = async () => {
       categoryOptions.value = (res.data.data.categoryList ?? []).map((data: string) => {
         return {
           value: data,
-          label: data
+          label: data,
         }
       })
       tagOptions.value = (res.data.data.tagList ?? []).map((data: string) => {
         return {
           value: data,
-          label: data
+          label: data,
         }
       })
       //跳转到详情页
@@ -201,7 +200,7 @@ const getOldPictureInfo = async () => {
   } else {
     const res = await getPictureVoByIdUsingGet({
       // @ts-ignore
-      id: pictureId
+      id: pictureId,
     })
     if (res.data.code === 0 && res.data.data) {
       message.success('获取图片信息成功')
@@ -211,7 +210,7 @@ const getOldPictureInfo = async () => {
         id: res.data.data.id,
         introduction: res.data.data.introduction,
         picName: res.data.data.picName,
-        tags: res.data.data.tags
+        tags: res.data.data.tags,
       }
     } else {
       message.error('获取图片信息失败,' + res.data.message)
@@ -225,6 +224,7 @@ onMounted(() => {
 
 <style scoped>
 #addPicturePage {
+  padding: 10px;
 }
 
 .edit-button {

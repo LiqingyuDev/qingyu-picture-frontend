@@ -70,6 +70,12 @@
                 </template>
               </a-button>
             </a-popconfirm>
+            <a-button type="default" @click="doDownload">
+              下载
+              <template #icon>
+                <DownloadOutlined />
+              </template>
+            </a-button>
           </a-space>
         </a-card>
       </a-col>
@@ -81,11 +87,12 @@
 import { ref, onMounted, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import { deletePictureUsingPost, getPictureVoByIdUsingGet } from '@/api/pictureController.ts'
-import { formatSize } from '@/util'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { downloadImage, formatSize } from '@/util'
+import { EditOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 
 import { useRouter } from 'vue-router'
+import { saveAs } from 'file-saver'
 // 定义 props
 const props = defineProps<{
   id: number
@@ -160,6 +167,13 @@ const doEdit = () => {
   }
   router.push(`/add_picture?id=${picture.value.id}`)
 }
+//下载图片
+// 处理下载
+const doDownload = () => {
+  downloadImage(picture.value.url)
+}
+
+
 </script>
 
 <style scoped>
