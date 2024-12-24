@@ -1,6 +1,5 @@
 <template>
   <div class="picture-upload">
-
     <!--    图片上传组件-->
     <a-upload
       list-type="picture-card"
@@ -18,7 +17,6 @@
     </a-upload>
   </div>
   <!--  表单-->
-
 </template>
 
 <script lang="ts" setup>
@@ -34,19 +32,29 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
 /**
  * 上传图片
  * @param file
  */
+interface UploadResponseData {
+  code: number
+  message: string
+  data: any
+}
+
 const handleUpload = async ({ file }: any) => {
   loading.value = true
   try {
     const params = props.picture ? { id: props.picture.id } : {}
     const res = await uploadPictureUsingPost(params, {}, file)
+    //@ts-ignore
     if (res.data.code === 0 && res.data.data) {
       message.success('上传成功')
+      //@ts-ignore
       props.onSuccess?.(res.data.data)
     } else {
+      //@ts-ignore
       message.error('上传失败,' + res.data.message)
     }
   } catch (error) {
@@ -62,6 +70,7 @@ const loading = ref<boolean>(false)
  * 上传文件之前校验
  * @param file
  */
+// @ts-ignore
 const beforeUpload = (file: UploadProps['fileList'][number]) => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
   if (!isJpgOrPng) {
@@ -76,12 +85,11 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
 </script>
 
 <style scoped>
-.picture-upload {
+/*.picture-upload {
   margin-inline: 100px;
   width: 80%;
   margin: 0 auto;
-}
-
+}*/
 .picture-upload :deep(.ant-upload) {
   width: 100% !important;
   height: 100% !important;
@@ -90,16 +98,14 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
 }
 
 .picture-upload img {
-  max-height: 360px;
+  max-height: 600px;
 }
 
 .ant-upload-select-picture-card i {
-  font-size: 32px;
   color: #999;
 }
 
 .ant-upload-select-picture-card .ant-upload-text {
-  margin-top: 8px;
   color: #666;
 }
 </style>

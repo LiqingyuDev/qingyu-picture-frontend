@@ -135,7 +135,7 @@ const originItems = [
         title: '用户管理',
       },
       {
-        key: '/admin/pictureManager',
+        key: '/admin/picture',
         icon: () => h(PictureOutlined),
         label: '图片管理',
         title: '图片管理',

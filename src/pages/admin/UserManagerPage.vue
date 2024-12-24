@@ -84,7 +84,9 @@
               </a-popconfirm>
             </span>
             <span v-else>
-              <a-button @click="edit(record)" class="button-spacing">编辑</a-button>
+              <a-button @click="edit(record)" class="button-spacing">
+                <template #icon><EditOutlined /></template>编辑</a-button
+              >
               <a-popconfirm
                 title="确定要删除该用户吗？"
                 @confirm="doDelete(record.id)"
@@ -92,6 +94,7 @@
                 cancel-text="取消"
                 class="button-spacing"
               >
+                <template #icon><DeleteOutlined /></template>
                 <a-button danger>删除</a-button>
               </a-popconfirm>
             </span>
@@ -107,7 +110,7 @@ import { cloneDeep } from 'lodash-es'
 import { computed, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
-import { ReloadOutlined, SearchOutlined } from '@ant-design/icons-vue'
+import { ReloadOutlined, SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import {
   deleteUserUsingPost,
   listUserVoByPageUsingPost,
