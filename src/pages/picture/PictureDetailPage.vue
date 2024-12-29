@@ -165,15 +165,13 @@ const doEdit = () => {
     message.error('图片不存在')
     return
   }
-  router.push(`/add_picture?id=${picture.value.id}`)
+  router.push(`/add_picture/direct?id=${picture.value.id}`)
 }
 //下载图片
 // 处理下载
 const doDownload = () => {
   downloadImage(picture.value.url)
 }
-
-
 </script>
 
 <style scoped>

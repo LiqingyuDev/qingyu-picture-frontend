@@ -1,7 +1,6 @@
 <template>
   <div id="pictureManagerPage">
     <!-- 图片表格搜索表单 -->
-    <!-- 图片表格搜索表单 -->
     <a-form
       class="search-form"
       layout="inline"
@@ -12,6 +11,7 @@
       <a-form-item label="关键词">
         <a-input v-model:value="searchParams.searchText" placeholder="请输入图片名称" allow-clear />
       </a-form-item>
+      <!--    类型  -->
       <a-form-item label="类型">
         <a-select
           v-model:value="searchParams.category"
@@ -28,6 +28,25 @@
           </a-select-option>
         </a-select>
       </a-form-item>
+      <!--    审核状态  -->
+      <a-form-item name="reviewStatus" label="审核状态">
+        <a-select
+          v-model:value="searchParams.reviewStatus"
+          placeholder="请选择审核状态"
+          allow-clear
+          style="width: 150px"
+        >
+          <a-select-option
+            v-for="option in PIC_REVIEW_STATUS_OPTIONS"
+            :key="option.label"
+            :value="option.value"
+          >
+            {{ option.label }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+
+      <!--   标签   -->
       <a-form-item label="标签">
         <a-select
           v-model:value="searchParams.tags"
@@ -53,40 +72,6 @@
       </a-form-item>
     </a-form>
 
-    <!--    <a-form
-          class="search-form"
-          layout="inline"
-          :model="searchParams"
-          @finish="doSearch"
-          style="margin-bottom: 16px"
-        >
-          <a-form-item label="关键词">
-            <a-input v-model:value="searchParams.searchText" placeholder="请输入图片名称" allow-clear />
-          </a-form-item>
-          <a-form-item label="类型">
-            <a-input v-model:value="searchParams.category" placeholder="请输入图片类型" allow-clear />
-          </a-form-item>
-          <a-form-item label="标签">
-            <a-select
-              v-model:value="searchParams.tags"
-              mode="tags"
-              style="width: 150px"
-              placeholder="请输入标签"
-              allow-clear
-            />
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" html-type="submit" style="margin-right: 8px">
-              <SearchOutlined />
-              搜索
-            </a-button>
-            <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
-              <ReloadOutlined />
-              重置
-            </a-button>
-          </a-form-item>
-        </a-form>-->
-
     <!-- 图片表格 -->
     <a-table
       :columns="columns"
@@ -103,6 +88,17 @@
           <div>宽高比：{{ record.picScale }}</div>
           <div>大小：{{ (record.picSize / 1024).toFixed(2) }}KB</div>
         </template>
+        <!-- 审核信息 -->
+        <template v-if="column.dataIndex === 'reviewInfo'">
+          <div v-if="record.reviewStatus">
+            审核状态：{{ PIC_REVIEW_STATUS_MAP[record.reviewStatus] }}
+          </div>
+          <div>审核人：{{ record.reviewerId }}</div>
+          <div v-if="record.reviewTime">
+            审核时间：{{ dayjs(record.reviewTime).format('YYYY-MM-DD HH:mm:ss') }}
+          </div>
+          <div>审核消息：{{ record.reviewMessage }}</div>
+        </template>
         <!-- 图片显示 -->
         <template v-if="column.dataIndex === 'url'">
           <div v-if="record">
@@ -113,10 +109,23 @@
           </div>
         </template>
         <!--        分类格式化-->
-
+        <template v-else-if="column.dataIndex === 'category'">
+          <div v-if="editableData[record.id]">
+            <a-select
+              v-if="editableData[record.id].category"
+              :options="categoryOptions"
+              style="min-width: 120px"
+              v-model:value="editableData[record.id].category"
+              placeholder="请选择分类"
+              allow-clear
+            />
+          </div>
+        </template>
+        <!--        标签格式化-->
         <template v-else-if="column.dataIndex === 'tags'">
           <div v-if="editableData[record.id]">
             <a-select
+              v-if="editableData[record.id].tags"
               mode="tags"
               :options="tagOptions"
               style="min-width: 120px"
@@ -133,34 +142,11 @@
             </a-space>
           </div>
         </template>
-        <!--        标签格式化-->
-        <template v-else-if="column.dataIndex === 'tags'">
-          <div v-if="editableData[record.id]">
-            <a-select
-              v-if="editableData[record.id].tags"
-              mode="tags"
-              v-model:value="editableData[record.id].tags"
-              placeholder="请选择标签"
-              allow-clear
-            />
-          </div>
-          <div v-else>
-            <a-space>
-              <a-tag v-for="tag in JSON.parse(record.tags || '[]')" :key="tag" :color="'pink'">
-                {{ tag }}
-              </a-tag>
-            </a-space>
-          </div>
-        </template>
+
         <!-- 时间格式化 -->
-        <template v-else-if="column.dataIndex === 'createTime'">
-          {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
-        </template>
-        <template v-else-if="column.dataIndex === 'editTime'">
-          {{ dayjs(record.editTime).format('YYYY-MM-DD HH:mm:ss') }}
-        </template>
-        <template v-else-if="column.dataIndex === 'updateTime'">
-          {{ dayjs(record.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
+        <template v-else-if="column.dataIndex === 'timeInfo'">
+          <div>创建时间：{{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
+          <div>编辑时间：{{ dayjs(record.editTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
         </template>
         <!-- 可编辑字段 -->
         <template
@@ -189,7 +175,7 @@
               </a-popconfirm>
             </span>
             <span v-else>
-              <a-button @click="edit(record)" class="button-spacing">
+              <a-button type="link" @click="edit(record)" class="button-spacing">
                 <template #icon><EditOutlined /></template>编辑</a-button
               >
               <a-popconfirm
@@ -199,9 +185,33 @@
                 cancel-text="取消"
                 class="button-spacing"
               >
-                <a-button danger
+                <a-button type="link" danger
                   >删除<template #icon><DeleteOutlined /></template
                 ></a-button>
+              </a-popconfirm>
+              <a-button
+                type="link"
+                @click="handleReview(record, PIC_REVIEW_STATUS_ENUM.PASS)"
+                class="button-spacing"
+                v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS"
+              >
+                <template #icon><CheckOutlined /></template>过审</a-button
+              >
+              <a-popconfirm
+                title="确定要拒绝该图片吗？"
+                @confirm="handleReview(record, PIC_REVIEW_STATUS_ENUM.REJECT)"
+                ok-text="拒绝"
+                cancel-text="取消"
+                class="button-spacing"
+              >
+                <a-button
+                  type="link"
+                  class="button-spacing"
+                  v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.REJECT"
+                  danger
+                >
+                  <template #icon><CloseOutlined /></template>拒绝</a-button
+                >
               </a-popconfirm>
             </span>
           </div>
@@ -216,14 +226,27 @@ import { cloneDeep } from 'lodash-es'
 import { computed, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
-import { ReloadOutlined, SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import {
+  ReloadOutlined,
+  SearchOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from '@ant-design/icons-vue'
 
 import {
   deletePictureUsingPost,
+  doPictureReviewUsingPost,
   listPictureByPageUsingPost,
   listPictureTagCategoryUsingGet,
   updatePictureUsingPost,
 } from '@/api/pictureController.ts'
+import {
+  PIC_REVIEW_STATUS_ENUM,
+  PIC_REVIEW_STATUS_MAP,
+  PIC_REVIEW_STATUS_OPTIONS,
+} from '../../constants/picture.ts'
 
 // 定义图片管理表格列
 const columns = [
@@ -231,6 +254,11 @@ const columns = [
     title: 'id',
     dataIndex: 'id',
     width: '5%',
+  },
+  {
+    title: '创建者 id',
+    dataIndex: 'userId',
+    width: '10%',
   },
   {
     title: '图片',
@@ -255,32 +283,28 @@ const columns = [
   {
     title: '标签',
     dataIndex: 'tags',
-    width: '10%',
+    width: '5%',
   },
   {
     title: '图片信息',
     dataIndex: 'picInfo',
     width: '8%',
   },
+
   {
-    title: '用户 id',
-    dataIndex: 'userId',
-    width: '10%',
+    title: '审核信息',
+    dataIndex: 'reviewInfo',
+    width: '12%',
   },
   {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    width: '10%',
-  },
-  {
-    title: '编辑时间',
-    dataIndex: 'editTime',
-    width: '10%',
+    title: '时间信息',
+    dataIndex: 'timeInfo',
+    width: '13%',
   },
   {
     title: '操作',
     key: 'action',
-    width: '10%',
+    width: '5%',
   },
 ]
 // 定义搜索参数
@@ -334,6 +358,8 @@ const doReset = () => {
   searchParams.searchText = ''
   searchParams.category = ''
   searchParams.tags = []
+  //@ts-ignore
+  searchParams.reviewStatus = ''
 
   searchParams.current = 1
   fetchData()
@@ -442,6 +468,26 @@ const listPictureTagCategoryCategory = async () => {
 onMounted(() => {
   listPictureTagCategoryCategory()
 })
+/**
+ *
+ * @param id
+ * @param status
+ */
+const handleReview = async (record: API.Picture, reviewStatus: number) => {
+  const reviewMessage =
+    reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS ? '管理员操作通过' : '管理员操作拒绝'
+  const res = await doPictureReviewUsingPost({
+    id: record.id,
+    reviewStatus,
+    reviewMessage,
+  })
+  if (res.data.code === 0 && res.data.data) {
+    await fetchData()
+    message.success('审核成功')
+  } else {
+    message.error('审核失败, ' + res.data.message)
+  }
+}
 </script>
 
 <style scoped>
@@ -452,12 +498,12 @@ onMounted(() => {
   height: 100vh;
 }
 
-.button-spacing {
+/*.button-spacing {
   margin-right: 5px;
-}
+}*/
 
 .search-form {
-  width: 50%;
+  width: 80%;
   justify-content: center;
   margin: 0 auto;
 }

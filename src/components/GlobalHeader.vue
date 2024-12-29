@@ -66,6 +66,7 @@ import {
   HomeOutlined,
   CrownOutlined,
   SettingOutlined,
+  UploadOutlined,
 } from '@ant-design/icons-vue'
 // @ts-ignore
 import { MenuProps, message } from 'ant-design-vue'
@@ -147,6 +148,20 @@ const originItems = [
     icon: () => h(PictureOutlined),
     label: '创建图片',
     title: '创建图片',
+    children: [
+      {
+        key: '/add_picture/direct', // 唯一的 key
+        icon: () => h(UploadOutlined),
+        label: '直接创建图片',
+        title: '直接创建图片',
+      },
+      {
+        key: '/add_picture/url', // 唯一的 key
+        icon: () => h(UploadOutlined),
+        label: 'URL创建图片',
+        title: 'URL创建图片',
+      },
+    ],
   },
 
   {
