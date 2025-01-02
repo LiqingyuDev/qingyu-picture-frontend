@@ -1,76 +1,100 @@
 <template>
   <div id="pictureManagerPage">
-    <!-- 图片表格搜索表单 -->
-    <a-form
-      class="search-form"
-      layout="inline"
-      :model="searchParams"
-      @finish="doSearch"
-      style="margin-bottom: 16px"
-    >
-      <a-form-item label="关键词">
-        <a-input v-model:value="searchParams.searchText" placeholder="请输入图片名称" allow-clear />
-      </a-form-item>
-      <!--    类型  -->
-      <a-form-item label="类型">
-        <a-select
-          v-model:value="searchParams.category"
-          placeholder="请选择图片类型"
-          allow-clear
-          style="width: 150px"
+    <div style="background: rgba(255, 255, 255, 0.3)">
+      <a-card title="图片管理" :bordered="false" style="margin-bottom: 8px">
+        <template #extra>
+          <a-space>
+            <a-button type="primary" href="/add_picture/direct" target="_blank" ghost>
+              <PlusOutlined />
+              添加图片
+            </a-button>
+            <a-button type="primary" href="/add_picture/batch" target="_blank" ghost>
+              <PlusOutlined />
+              批量添加图片
+            </a-button>
+          </a-space>
+        </template>
+        <!-- 图片表格搜索表单 -->
+        <a-form
+          class="search-form"
+          layout="inline"
+          :model="searchParams"
+          @finish="doSearch"
+          style="margin-bottom: 8px"
         >
-          <a-select-option
-            v-for="option in categoryOptions"
-            :key="option.value"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <!--    审核状态  -->
-      <a-form-item name="reviewStatus" label="审核状态">
-        <a-select
-          v-model:value="searchParams.reviewStatus"
-          placeholder="请选择审核状态"
-          allow-clear
-          style="width: 150px"
-        >
-          <a-select-option
-            v-for="option in PIC_REVIEW_STATUS_OPTIONS"
-            :key="option.label"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
+          <a-form-item label="关键词">
+            <a-input
+              v-model:value="searchParams.searchText"
+              placeholder="请输入图片名称"
+              allow-clear
+            />
+          </a-form-item>
+          <!--    类型  -->
+          <a-form-item label="类型">
+            <a-select
+              v-model:value="searchParams.category"
+              placeholder="请选择图片类型"
+              allow-clear
+              style="width: 150px"
+            >
+              <a-select-option
+                v-for="option in categoryOptions"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+          <!--    审核状态  -->
+          <a-form-item name="reviewStatus" label="审核状态">
+            <a-select
+              v-model:value="searchParams.reviewStatus"
+              placeholder="请选择审核状态"
+              allow-clear
+              style="width: 150px"
+            >
+              <a-select-option
+                v-for="option in PIC_REVIEW_STATUS_OPTIONS"
+                :key="option.label"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
 
-      <!--   标签   -->
-      <a-form-item label="标签">
-        <a-select
-          v-model:value="searchParams.tags"
-          mode="tags"
-          placeholder="请选择标签"
-          allow-clear
-          style="width: 150px"
-        >
-          <a-select-option v-for="option in tagOptions" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit" style="margin-right: 8px">
-          <SearchOutlined />
-          搜索
-        </a-button>
-        <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
-          <ReloadOutlined />
-          重置
-        </a-button>
-      </a-form-item>
-    </a-form>
+          <!--   标签   -->
+          <a-form-item label="标签">
+            <a-select
+              v-model:value="searchParams.tags"
+              mode="tags"
+              placeholder="请选择标签"
+              allow-clear
+              style="width: 150px"
+            >
+              <a-select-option
+                v-for="option in tagOptions"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" html-type="submit" style="margin-right: 8px">
+              <SearchOutlined />
+              搜索
+            </a-button>
+            <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
+              <ReloadOutlined />
+              重置
+            </a-button>
+          </a-form-item>
+        </a-form>
+      </a-card>
+    </div>
 
     <!-- 图片表格 -->
     <a-table
@@ -108,8 +132,7 @@
             <a-image src="https://www.antdv.com/assets/logo.1ef800a8.svg" style="width: 81px" />
           </div>
         </template>
-        <!--        分类格式化-->
-        <template v-else-if="column.dataIndex === 'category'">
+        <template v-if="column.dataIndex === 'category'">
           <div v-if="editableData[record.id]">
             <a-select
               v-if="editableData[record.id].category"
@@ -121,7 +144,7 @@
             />
           </div>
         </template>
-        <!--        标签格式化-->
+
         <template v-else-if="column.dataIndex === 'tags'">
           <div v-if="editableData[record.id]">
             <a-select
@@ -233,6 +256,7 @@ import {
   DeleteOutlined,
   CheckOutlined,
   CloseOutlined,
+  PlusOutlined,
 } from '@ant-design/icons-vue'
 
 import {

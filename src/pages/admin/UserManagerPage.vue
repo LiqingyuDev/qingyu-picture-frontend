@@ -1,89 +1,106 @@
 <template>
   <div id="userManagerPage">
-    <!-- 用户表格搜索表单 -->
-    <a-form
-      class="search-form"
-      layout="inline"
-      :model="searchParams"
-      @finish="doSearch"
-      style="margin-bottom: 16px"
-    >
-      <a-form-item label="用户账号">
-        <a-input v-model:value="searchParams.userAccount" placeholder="请输入账号" allow-clear />
-      </a-form-item>
-      <a-form-item label="用户昵称">
-        <a-input v-model:value="searchParams.userName" placeholder="请输入用户昵称" allow-clear />
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit" style="margin-right: 8px">
-          <SearchOutlined />
-          搜索
-        </a-button>
-        <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
-          <ReloadOutlined />
-          重置
-        </a-button>
-      </a-form-item>
-    </a-form>
-    <!-- 用户表格 -->
-    <a-table
-      :columns="columns"
-      :data-source="dataList"
-      :pagination="pagination"
-      @change="doTableChange"
-    >
-      <template #bodyCell="{ column, record }">
-        <!-- 头像显示 -->
-        <template v-if="column.dataIndex === 'userAvatar'">
-          <div v-if="record.userAvatar">
-            <a-image :src="record.userAvatar" style="width: 81px" />
-          </div>
-          <div v-else>
-            <a-image src="https://www.antdv.com/assets/logo.1ef800a8.svg" style="width: 81px" />
-          </div>
-        </template>
-        <!-- 用户角色显示 -->
-        <template v-else-if="column.dataIndex === 'userRole'">
-          <template v-if="record.userRole === 'user'">
-            <a-tag color="blue">普通用户</a-tag>
+    <div style="background: rgba(255, 255, 255, 0.3)">
+      <a-card title="图片管理" :bordered="false" style="margin-bottom: 8px">
+        <!--        <template #extra>
+                  <a-button type="default" @click="()=>{
+                    route.push({ name: 'pictureAdd' });
+                  }">
+                    <PlusOutlined />
+                    添加用户
+                  </a-button>
+                  <a-button type="default" @click="doAdd">
+                    <PlusOutlined />
+                    批量添加图片
+                  </a-button>
+                </template>-->
+        <!-- 用户表格搜索表单 -->
+        <a-form
+          class="search-form"
+          layout="inline"
+          :model="searchParams"
+          @finish="doSearch"
+          style="margin-bottom: 16px"
+        >
+          <a-form-item label="用户账号">
+            <a-input v-model:value="searchParams.userAccount" placeholder="请输入账号" allow-clear />
+          </a-form-item>
+          <a-form-item label="用户昵称">
+            <a-input v-model:value="searchParams.userName" placeholder="请输入用户昵称" allow-clear />
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" html-type="submit" style="margin-right: 8px">
+              <SearchOutlined />
+              搜索
+            </a-button>
+            <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
+              <ReloadOutlined />
+              重置
+            </a-button>
+          </a-form-item>
+        </a-form>
+      </a-card>
+    </div>
+
+      <!-- 用户表格 -->
+      <a-table
+        :columns="columns"
+        :data-source="dataList"
+        :pagination="pagination"
+        @change="doTableChange"
+      >
+        <template #bodyCell="{ column, record }">
+          <!-- 头像显示 -->
+          <template v-if="column.dataIndex === 'userAvatar'">
+            <div v-if="record.userAvatar">
+              <a-image :src="record.userAvatar" style="width: 81px" />
+            </div>
+            <div v-else>
+              <a-image src="https://www.antdv.com/assets/logo.1ef800a8.svg" style="width: 81px" />
+            </div>
           </template>
-          <template v-else-if="record.userRole === 'admin'">
-            <a-tag color="green">管理员</a-tag>
-          </template>
-          <template v-else>
-            <a-tag color="red">异常账号</a-tag>
-          </template>
-        </template>
-        <!-- 时间格式化 -->
-        <template v-else-if="column.dataIndex === 'createTime'">
-          {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
-        </template>
-        <template v-else-if="column.dataIndex === 'updateTime'">
-          {{ dayjs(record.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
-        </template>
-        <!-- 可编辑字段 -->
-        <template v-else-if="['userAccount', 'userName', 'userProfile'].includes(column.dataIndex)">
-          <div>
-            <a-input
-              v-if="editableData[record.id]"
-              v-model:value="(editableData[record.id] as any)[column.dataIndex]"
-              style="margin: -5px 0"
-            />
-            <template v-else>
-              {{ record[column.dataIndex] }}
+          <!-- 用户角色显示 -->
+          <template v-else-if="column.dataIndex === 'userRole'">
+            <template v-if="record.userRole === 'user'">
+              <a-tag color="blue">普通用户</a-tag>
             </template>
-          </div>
-        </template>
-        <!-- 操作按钮 -->
-        <template v-else-if="column.key === 'action'">
-          <div class="editable-row-operations">
+            <template v-else-if="record.userRole === 'admin'">
+              <a-tag color="green">管理员</a-tag>
+            </template>
+            <template v-else>
+              <a-tag color="red">异常账号</a-tag>
+            </template>
+          </template>
+          <!-- 时间格式化 -->
+          <template v-else-if="column.dataIndex === 'createTime'">
+            {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+          </template>
+          <template v-else-if="column.dataIndex === 'updateTime'">
+            {{ dayjs(record.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
+          </template>
+          <!-- 可编辑字段 -->
+          <template v-else-if="['userAccount', 'userName', 'userProfile'].includes(column.dataIndex)">
+            <div>
+              <a-input
+                v-if="editableData[record.id]"
+                v-model:value="(editableData[record.id] as any)[column.dataIndex]"
+                style="margin: -5px 0"
+              />
+              <template v-else>
+                {{ record[column.dataIndex] }}
+              </template>
+            </div>
+          </template>
+          <!-- 操作按钮 -->
+          <template v-else-if="column.key === 'action'">
+            <div class="editable-row-operations">
             <span v-if="editableData[record.id]">
               <a-button @click="save(record)" class="button-spacing">保存</a-button>
               <a-popconfirm title="确定要取消吗？" @confirm="cancel(record)" class="button-spacing">
                 <a-button>取消</a-button>
               </a-popconfirm>
             </span>
-            <span v-else>
+              <span v-else>
               <a-button @click="edit(record)" class="button-spacing">
                 <template #icon><EditOutlined /></template>编辑</a-button
               >
@@ -98,11 +115,11 @@
                 <a-button danger>删除</a-button>
               </a-popconfirm>
             </span>
-          </div>
+            </div>
+          </template>
         </template>
-      </template>
-    </a-table>
-  </div>
+      </a-table>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -110,11 +127,11 @@ import { cloneDeep } from 'lodash-es'
 import { computed, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
-import { ReloadOutlined, SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { ReloadOutlined, SearchOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import {
   deleteUserUsingPost,
   listUserVoByPageUsingPost,
-  updateUserUsingPost,
+  updateUserUsingPost
 } from '@/api/userController.ts'
 
 // 定义搜索参数
@@ -122,7 +139,7 @@ const searchParams = reactive<API.UserQueryRequest>({
   current: 1,
   pageSize: 10,
   sortField: 'createTime',
-  sortOrder: 'ascend',
+  sortOrder: 'ascend'
 })
 
 // 定义表格列
@@ -135,7 +152,7 @@ const columns = [
   { title: '用户角色', dataIndex: 'userRole', width: '5%' },
   { title: '创建时间', dataIndex: 'createTime', width: '10%' },
   { title: '更新时间', dataIndex: 'updateTime', width: '10%' },
-  { title: '操作', key: 'action', width: '12%' },
+  { title: '操作', key: 'action', width: '12%' }
 ]
 
 // 定义展示数据
@@ -152,7 +169,7 @@ const pagination = computed(() => ({
   pageSize: searchParams.pageSize,
   total: total.value,
   showSizeChanger: true,
-  showTotal: (total: number) => `共${total}条数据`,
+  showTotal: (total: number) => `共${total}条数据`
 }))
 
 // 动态修改分页
