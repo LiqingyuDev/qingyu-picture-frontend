@@ -7,7 +7,6 @@ import {
   listPictureVoByPageUsingPost,
 } from '@/api/pictureController.ts'
 
-
 // 定义响应式变量
 const loading = ref(true)
 const dataList = ref<API.PictureVO[]>([])
@@ -114,7 +113,6 @@ const doClickPicture = (pictureId: number) => {
     path: `/picture/${pictureId}`,
   })
 }
-
 </script>
 
 <template>
@@ -166,7 +164,8 @@ const doClickPicture = (pictureId: number) => {
             <template #cover>
               <img
                 :alt="picture.picName"
-                :src="picture.url"
+
+                :src="picture.thumbnailUrl ?? picture.url"
                 style="height: 180px; object-fit: cover"
               />
             </template>

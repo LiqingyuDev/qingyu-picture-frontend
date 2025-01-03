@@ -50,29 +50,25 @@ import { useRouter } from 'vue-router'
 
 const formData = reactive({
   searchText: '',
-  count: 10,
+  count: 5,
   namePrefix: '',
 })
 const loading = ref(false)
 const router = useRouter()
 const handleSubmit = async (values: any) => {
   loading.value = true
-  try {
-    //不影响运行any一下吧
-    const res: any = await uploadPictureByBatchUsingPost({
-      ...formData,
+  const res = await uploadPictureByBatchUsingPost({
+    ...formData,
+  })
+  if (res.data.code === 0 && res.data.data) {
+    message.success(`创建成功，共 ${res.data.data} 条`)
+    router.push({
+      path: '/',
     })
-    if (res.data.code === 0 && res.data.data) {
-      message.success(`创建成功，共 ${res.data.data} 条`)
-      router.push('/')
-    } else {
-      message.error('创建失败，' + res.data.message)
-    }
-  } catch (error) {
-    message.error('请求失败，请重试')
-  } finally {
-    loading.value = false
+  } else {
+    message.error('创建失败，' + res.data.message)
   }
+  loading.value = false
 }
 </script>
 

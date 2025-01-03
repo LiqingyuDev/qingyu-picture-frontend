@@ -179,8 +179,8 @@ const originItems = [
   {
     key: 'others',
     icon: () => h(GithubOutlined),
-    label: h('a', { href: 'https://www.antdv.com' }, 'Github'),
-    title: '其他',
+    label: h('a', { href: 'https://github.com/LiqingyuDev/qingyu-picture-backend' }, 'Github'),
+    title: 'Github',
   },
 ]
 
