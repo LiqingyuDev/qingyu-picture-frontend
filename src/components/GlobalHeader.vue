@@ -77,6 +77,10 @@ import {
   LoginOutlined,
   LogoutOutlined,
   PictureOutlined,
+  LinkOutlined,
+  FolderAddOutlined,
+  FileImageOutlined,
+  FolderOpenOutlined,
   TeamOutlined,
 } from '@ant-design/icons-vue'
 
@@ -137,9 +141,15 @@ const originItems = [
       },
       {
         key: '/admin/picture',
-        icon: () => h(PictureOutlined),
+        icon: () => h(FileImageOutlined),
         label: '图片管理',
         title: '图片管理',
+      },
+      {
+        key: '/admin/space',
+        icon: () => h(FolderOpenOutlined),
+        label: '空间管理',
+        title: '空间管理',
       },
     ],
   },
@@ -151,13 +161,13 @@ const originItems = [
     children: [
       {
         key: '/add_picture/direct', // 唯一的 key
-        icon: () => h(UploadOutlined),
+        icon: () => h(FolderAddOutlined),
         label: '直接创建图片',
         title: '直接创建图片',
       },
       {
         key: '/add_picture/url', // 唯一的 key
-        icon: () => h(UploadOutlined),
+        icon: () => h(LinkOutlined),
         label: 'URL创建图片',
         title: 'URL创建图片',
       },

@@ -8,6 +8,7 @@ import PictureManagerPage from '@/pages/admin/PictureManagerPage.vue'
 import PictureDetailPage from '@/pages/picture/PictureDetailPage.vue'
 import AddPictureByUrlPage from '@/pages/picture/AddPictureByUrlPage.vue'
 import AddPictureByBatchPage from '@/pages/admin/AddPictureByBatchPage.vue'
+import SpaceManagePage from '@/pages/admin/SpaceManagePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -61,7 +62,11 @@ const router = createRouter({
       name: '图片管理',
       component: PictureManagerPage,
     },
-
+    {
+      path: '/admin/space',
+      name: '空间管理',
+      component: SpaceManagePage,
+    },
     {
       path: '/about',
       name: '关于',
