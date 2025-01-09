@@ -6,6 +6,7 @@ import {
   listPictureTagCategoryUsingGet,
   listPictureVoByPageUsingPost,
 } from '@/api/pictureController.ts'
+import PictureList from '@/components/PictureList.vue'
 
 // 定义响应式变量
 const loading = ref(true)
@@ -21,20 +22,12 @@ const categoryList = ref<string[]>([])
 const tagList = ref<string[]>([])
 const selectedCategory = ref<string>('all')
 const selectedTags = ref<string[]>([])
-
-// 分页配置
-const pagination = computed(() => ({
-  current: searchParams.current,
-  pageSize: searchParams.pageSize,
-  total: total.value,
-  onChange: (page: number, pageSize: number) => {
-    // 动态修改分页
-    searchParams.current = page
-    searchParams.pageSize = pageSize
-    fetchData()
-  },
-}))
-
+// 分页改变时的处理方法
+const onPageChange = (page: number, pageSize: number) => {
+  searchParams.current = page
+  searchParams.pageSize = pageSize
+  fetchData()
+}
 // 生命周期钩子
 // 页面加载时请求一次数据
 onMounted(() => {
@@ -103,16 +96,6 @@ const doSearch = () => {
   searchParams.current = 1
   fetchData()
 }
-
-// 点击图片跳转至图片详情
-const router = useRouter()
-
-// 跳转至图片详情
-const doClickPicture = (pictureId: number) => {
-  router.push({
-    path: `/picture/${pictureId}`,
-  })
-}
 </script>
 
 <template>
@@ -149,38 +132,47 @@ const doClickPicture = (pictureId: number) => {
         </a-checkable-tag>
       </a-space>
     </div>
-    <!-- 图片展示区 -->
-    <a-list
-      :grid="{ gutter: 16, xs: 1, sm: 2, md: 5, lg: 4, xl: 5, xxl: 6 }"
-      :data-source="dataList"
-      :pagination="pagination"
-      :loading="loading"
-      style="padding: 0"
-    >
-      <template #renderItem="{ item: picture }">
-        <a-list-item>
-          <!-- 单张图片 -->
-          <a-card hoverable @click="doClickPicture(picture.id)">
-            <template #cover>
-              <img
-                :alt="picture.picName"
-
-                :src="picture.thumbnailUrl ?? picture.url"
-                style="height: 180px; object-fit: cover"
-              />
-            </template>
-            <a-card-meta :title="picture.picName">
-              <template #description>
-                <a-flex>
-                  <a-tag color="blue">{{ picture.category ?? '默认' }}</a-tag>
-                  <a-tag v-for="tag in picture.tags" :key="tag" :color="'pink'">{{ tag }}</a-tag>
-                </a-flex>
-              </template>
-            </a-card-meta>
-          </a-card>
-        </a-list-item>
-      </template>
-    </a-list>
+    <!-- 图片列表 -->
+    <PictureList :dataList="dataList" :loading="loading" />
+    <a-pagination
+      style="text-align: right"
+      v-model:current="searchParams.current"
+      v-model:pageSize="searchParams.pageSize"
+      :total="total"
+      @change="onPageChange"
+    />
+    <!--
+        &lt;!&ndash; 图片展示区 &ndash;&gt;
+        <a-list
+          :grid="{ gutter: 0, xs: 1, sm: 2, md: 5, lg: 4, xl: 5, xxl: 6 }"
+          :data-source="dataList"
+          :pagination="pagination"
+          :loading="loading"
+          style="padding: 0"
+        >
+          <template #renderItem="{ item: picture }">
+            <a-list-item>
+              &lt;!&ndash; 单张图片 &ndash;&gt;
+              <a-card hoverable @click="doClickPicture(picture.id)">
+                <template #cover>
+                  <img
+                    :alt="picture.picName"
+                    :src="picture.thumbnailUrl ?? picture.url"
+                    style="height: 180px; object-fit: cover"
+                  />
+                </template>
+                <a-card-meta :title="picture.picName" style="">
+                  <template #description>
+                    <a-flex>
+                      <a-tag color="blue">{{ picture.category ?? '默认' }}</a-tag>
+                      <a-tag v-for="tag in picture.tags" :key="tag" :color="'pink'">{{ tag }}</a-tag>
+                    </a-flex>
+                  </template>
+                </a-card-meta>
+              </a-card>
+            </a-list-item>
+          </template>
+        </a-list>-->
   </div>
 </template>
 

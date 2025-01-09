@@ -73,12 +73,15 @@ import {
   PictureOutlined,
   SettingOutlined,
   InfoCircleOutlined,
+  LockOutlined,
+  FolderOutlined,
   GithubOutlined,
   LinkOutlined,
   FolderAddOutlined,
   FileImageOutlined,
   FolderOpenOutlined,
   TeamOutlined,
+  UploadOutlined,
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
@@ -114,6 +117,7 @@ router.afterEach((to, from, next) => {
 
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { userLogoutUsingPost } from '@/api/userController.ts'
+import SpaceDetailPage from '@/pages/space/SpaceDetailPage.vue'
 
 const loginUserStore = useLoginUserStore()
 
@@ -152,30 +156,44 @@ const originItems = [
   },
   {
     key: '/add_picture',
-    icon: () => h(PictureOutlined),
-    label: '创建图片',
-    title: '创建图片',
+    icon: () => h(UploadOutlined),
+    label: '上传图片',
+    title: '上传图片',
     children: [
       {
         key: '/add_picture/direct', // 唯一的 key
-        icon: () => h(FolderAddOutlined),
-        label: '直接创建图片',
-        title: '直接创建图片',
+        icon: () => h(PictureOutlined),
+        label: '直接上传图片',
+        title: '直接上传图片',
       },
       {
         key: '/add_picture/url',
         icon: () => h(LinkOutlined),
-        label: 'URL创建图片',
-        title: 'URL创建图片',
+        label: 'URL上传图片',
+        title: 'URL上传图片',
       },
     ],
   },
   {
-    key: '/add_space',
-    icon: () => h(FolderAddOutlined),
-    label: '创建空间',
-    title: '创建空间',
+    icon: () => h(LockOutlined),
+    label: '私有空间',
+    title: '私有空间',
+    children: [
+      {
+        key: '/add_space',
+        icon: () => h(FolderAddOutlined),
+        label: '创建空间',
+        title: '创建空间',
+      },
+      {
+        key: '/my_space',
+        icon: () => h(FolderOutlined),
+        label: '我的空间',
+        title: '我的空间',
+      },
+    ],
   },
+
   {
     key: '/setting',
     icon: () => h(SettingOutlined),
