@@ -1,43 +1,36 @@
 <template>
   <div id="userManagerPage">
-    <div style="background: rgba(255, 255, 255, 0.3)">
-      <a-card title="用户管理" :bordered="false" style="margin-bottom: 8px">
-
-        <!-- 用户表格搜索表单 -->
-        <a-form
-          class="search-form"
-          layout="inline"
-          :model="searchParams"
-          @finish="doSearch"
-          style="margin-bottom: 16px"
-        >
-          <a-form-item label="用户账号">
-            <a-input
-              v-model:value="searchParams.userAccount"
-              placeholder="请输入账号"
-              allow-clear
-            />
-          </a-form-item>
-          <a-form-item label="用户昵称">
-            <a-input
-              v-model:value="searchParams.userName"
-              placeholder="请输入用户昵称"
-              allow-clear
-            />
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" html-type="submit" style="margin-right: 8px">
-              <SearchOutlined />
-              搜索
-            </a-button>
-            <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
-              <ReloadOutlined />
-              重置
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </a-card>
-    </div>
+    <a-card
+      title="用户管理"
+      :bordered="false"
+      style="background-color: rgba(255, 255, 255, 0.5); margin-bottom: 8px"
+    >
+      <!-- 用户表格搜索表单 -->
+      <a-form
+        class="search-form"
+        layout="inline"
+        :model="searchParams"
+        @finish="doSearch"
+        style="margin-bottom: 16px"
+      >
+        <a-form-item label="用户账号">
+          <a-input v-model:value="searchParams.userAccount" placeholder="请输入账号" allow-clear />
+        </a-form-item>
+        <a-form-item label="用户昵称">
+          <a-input v-model:value="searchParams.userName" placeholder="请输入用户昵称" allow-clear />
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" html-type="submit" style="margin-right: 8px">
+            <SearchOutlined />
+            搜索
+          </a-button>
+          <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
+            <ReloadOutlined />
+            重置
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </a-card>
 
     <!-- 用户表格 -->
     <a-table
@@ -108,8 +101,10 @@
                 cancel-text="取消"
                 class="button-spacing"
               >
-                <template #icon><DeleteOutlined /></template>
-                <a-button danger>删除</a-button>
+                <a-button danger
+                  >删除
+                  <template #icon><DeleteOutlined /></template>
+                </a-button>
               </a-popconfirm>
             </span>
           </div>

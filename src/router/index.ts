@@ -9,6 +9,7 @@ import PictureDetailPage from '@/pages/picture/PictureDetailPage.vue'
 import AddPictureByUrlPage from '@/pages/picture/AddPictureByUrlPage.vue'
 import AddPictureByBatchPage from '@/pages/admin/AddPictureByBatchPage.vue'
 import SpaceManagePage from '@/pages/admin/SpaceManagePage.vue'
+import AddSpacePage from '@/pages/space/AddSpacePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,6 +67,11 @@ const router = createRouter({
       path: '/admin/space',
       name: '空间管理',
       component: SpaceManagePage,
+    },
+    {
+      path: '/add_space',
+      name: '创建空间',
+      component: AddSpacePage,
     },
     {
       path: '/about',

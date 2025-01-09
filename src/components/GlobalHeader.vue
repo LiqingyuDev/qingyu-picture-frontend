@@ -60,23 +60,20 @@
 
 <script lang="ts" setup>
 import { h, ref, computed } from 'vue'
-import {
-  InfoCircleOutlined,
-  GithubOutlined,
-  HomeOutlined,
-  CrownOutlined,
-  SettingOutlined,
-  UploadOutlined,
-} from '@ant-design/icons-vue'
 // @ts-ignore
 import { MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 
 import {
+  HomeOutlined,
+  CrownOutlined,
   DownOutlined,
   LoginOutlined,
   LogoutOutlined,
   PictureOutlined,
+  SettingOutlined,
+  InfoCircleOutlined,
+  GithubOutlined,
   LinkOutlined,
   FolderAddOutlined,
   FileImageOutlined,
@@ -166,14 +163,19 @@ const originItems = [
         title: '直接创建图片',
       },
       {
-        key: '/add_picture/url', // 唯一的 key
+        key: '/add_picture/url',
         icon: () => h(LinkOutlined),
         label: 'URL创建图片',
         title: 'URL创建图片',
       },
     ],
   },
-
+  {
+    key: '/add_space',
+    icon: () => h(FolderAddOutlined),
+    label: '创建空间',
+    title: '创建空间',
+  },
   {
     key: '/setting',
     icon: () => h(SettingOutlined),

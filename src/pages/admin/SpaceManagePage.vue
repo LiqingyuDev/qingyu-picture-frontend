@@ -1,51 +1,53 @@
 <template>
   <div id="spaceManagerPage">
-    <div style="background: rgba(255, 255, 255, 0.3)">
-      <a-card title="空间管理" :bordered="false" style="margin-bottom: 8px">
-        <template #extra>
-          <a-space>
-            <a-button type="primary" href="/add_space" target="_blank">
-              <PlusOutlined />
-              创建空间
-            </a-button>
-          </a-space>
-        </template>
-        <!-- 空间表格搜索表单 -->
-        <a-form
-          class="search-form"
-          layout="inline"
-          :model="searchParams"
-          @finish="doSearch"
-          style="margin-bottom: 16px"
-        >
-          <a-form-item label="空间级别">
-            <a-select
-              :options="SPACE_LEVEL_OPTIONS"
-              v-model:value="searchParams.spaceLevel"
-              placeholder="请选择空间级别"
-              style="width: 150px"
-            />
-          </a-form-item>
-          <a-form-item label="空间名称">
-            <a-input
-              v-model:value="searchParams.spaceName"
-              placeholder="请输入空间名称"
-              allow-clear
-            />
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" html-type="submit" style="margin-right: 8px">
-              <SearchOutlined />
-              搜索
-            </a-button>
-            <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
-              <ReloadOutlined />
-              重置
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </a-card>
-    </div>
+    <a-card
+      title="空间管理"
+      :bordered="false"
+      style="background-color: rgba(255, 255, 255, 0.5); margin-bottom: 8px"
+    >
+      <template #extra>
+        <a-space>
+          <a-button type="primary" href="/add_space" target="_blank">
+            <PlusOutlined />
+            创建空间
+          </a-button>
+        </a-space>
+      </template>
+      <!-- 空间表格搜索表单 -->
+      <a-form
+        class="search-form"
+        layout="inline"
+        :model="searchParams"
+        @finish="doSearch"
+        style="margin-bottom: 16px"
+      >
+        <a-form-item label="空间级别">
+          <a-select
+            :options="SPACE_LEVEL_OPTIONS"
+            v-model:value="searchParams.spaceLevel"
+            placeholder="请选择空间级别"
+            style="width: 150px"
+          />
+        </a-form-item>
+        <a-form-item label="空间名称">
+          <a-input
+            v-model:value="searchParams.spaceName"
+            placeholder="请输入空间名称"
+            allow-clear
+          />
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" html-type="submit" style="margin-right: 8px">
+            <SearchOutlined />
+            搜索
+          </a-button>
+          <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
+            <ReloadOutlined />
+            重置
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </a-card>
 
     <!-- 空间表格 -->
     <a-table

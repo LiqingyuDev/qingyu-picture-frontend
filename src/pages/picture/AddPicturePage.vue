@@ -11,10 +11,6 @@
           <PictureUpload :picture="picture" :on-success="onSuccess" />
         </a-card>
         <br />
-        <!--          URL图片上传组件-->
-        <!--        <a-card title="通过URL解析图片">
-                  <UrlPictureUpload :picture="picture" :on-success="onSuccess" />
-                </a-card>-->
       </a-col>
       <!-- 图片信息区 -->
       <a-col :v-if="route.query?.id" :sm="24" :md="8" :xl="6">

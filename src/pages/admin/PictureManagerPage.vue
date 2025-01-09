@@ -1,7 +1,11 @@
 <template>
   <div id="pictureManagerPage">
     <div style="background: rgba(255, 255, 255, 0.3)">
-      <a-card title="图片管理" :bordered="false" style="margin-bottom: 8px">
+      <a-card
+        title="图片管理"
+        :bordered="false"
+        style="background-color: rgba(255, 255, 255, 0.5); margin-bottom: 8px"
+      >
         <template #extra>
           <a-space>
             <a-button type="primary" href="/add_picture/direct" target="_blank" ghost>

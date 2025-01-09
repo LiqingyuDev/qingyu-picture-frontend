@@ -325,6 +325,7 @@ declare namespace API {
   type SpaceAddRequest = {
     maxCount?: number
     maxSize?: number
+    spaceLevel?: number
     spaceName?: string
   }
 
