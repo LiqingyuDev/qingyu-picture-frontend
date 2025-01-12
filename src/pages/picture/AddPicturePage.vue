@@ -7,14 +7,18 @@
       <a-col :sm="24" :md="16" :xl="18">
         <!-- 标题 -->
         <a-card :title="route.query?.id ? '编辑图片' : '上传图片'">
+          <!--        空间-->
+          <a-typography-paragraph v-if="spaceId" type="econdary"
+            >上传至私有空间: <a :href="`/space/${spaceId}`">{{ spaceId }}</a></a-typography-paragraph
+          >
           <!--          图片上传组件-->
-          <PictureUpload :picture="picture" :on-success="onSuccess" />
+          <PictureUpload :picture="picture"  :spaceId="spaceId" :on-success="onSuccess" />
         </a-card>
         <br />
       </a-col>
       <!-- 图片信息区 -->
-      <a-col :v-if="route.query?.id" :sm="24" :md="8" :xl="6">
-        <a-card title="图片信息">
+      <a-col :sm="24" :md="8" :xl="6">
+        <a-card v-if="picture" title="图片信息">
           <!--    表单-->
           <a-form
             v-if="picture"
@@ -101,7 +105,6 @@ import {
 import { CloudUploadOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 
 import { useRoute, useRouter } from 'vue-router'
-import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
 
 // 定义一个响应式的 picture 变量，用于存储上传的图片信息
 const picture = ref<API.PictureVO>()
@@ -195,7 +198,7 @@ onMounted(() => {
  */
 const route = useRoute()
 const pictureId = route.query?.id
-console.log('获取到的 id:', pictureId) // 添加这行代码来调试
+const spaceId = route.query?.spaceId
 const getOldPictureInfo = async () => {
   if (!pictureId) {
     message.info('请先上传图片')

@@ -8,12 +8,21 @@
             <a-space>
               <a-button
                 type="primary"
-                href="/add_picture/direct?spaceId=${id}"
+                :href="`/add_picture/direct?spaceId=${id}`"
                 target="_blank"
                 ghost
               >
                 <PlusOutlined />
                 添加图片
+              </a-button>
+              <a-button
+                type="primary"
+                :href="`/add_picture/url?spaceId=${id}`"
+                target="_blank"
+                ghost
+              >
+                <PlusOutlined />
+                通过URL添加图片
               </a-button>
             </a-space>
           </template>

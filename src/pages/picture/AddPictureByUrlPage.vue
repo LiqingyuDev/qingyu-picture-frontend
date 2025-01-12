@@ -7,15 +7,19 @@
       <a-col :sm="24" :md="16" :xl="18">
         <!--          URL图片上传组件-->
         <a-card title="通过URL解析图片">
-          <UrlPictureUpload :picture="picture" :on-success="onSuccess" />
+          <!--        空间-->
+          <a-typography-paragraph v-if="spaceId" type="secondary"
+            >上传至私有空间:
+            <a :href="`/space/${spaceId}`">{{ spaceId }}</a></a-typography-paragraph
+          >
+          <UrlPictureUpload :picture="picture" :spaceId="spaceId" :on-success="onSuccess" />
         </a-card>
       </a-col>
       <!-- 图片信息区 -->
-      <a-col :v-if="route.query?.id" :sm="24" :md="8" :xl="6">
-        <a-card title="图片信息">
+      <a-col :sm="24" :md="8" :xl="6">
+        <a-card v-if="picture" title="图片信息">
           <!--    表单-->
           <a-form
-            v-if="picture"
             class="edit-form"
             layout="vertical"
             :model="pictureForm"
@@ -88,7 +92,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import PictureUpload from '@/components/PictureUpload.vue'
 import { onMounted, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import {
@@ -110,7 +113,7 @@ const onSuccess = (newPicture: API.PictureVO) => {
   picture.value = newPicture
   pictureForm.value.picName = newPicture.picName
 }
-const router = useRouter()
+
 const pictureForm = ref<API.PictureQueryRequest>({})
 //提交表单之后的逻辑
 const handleSubmit = async (values: any) => {
@@ -127,7 +130,7 @@ const handleSubmit = async (values: any) => {
     if (res.data.code === 0 && res.data.data) {
       message.success('编辑成功')
       //跳转到详情页
-      router.push({
+      await router.push({
         path: `/picture/${pictureId}`,
       })
     } else {
@@ -179,10 +182,10 @@ const listPictureTagCategoryCategory = async () => {
       })
       //跳转到详情页
     } else {
-      message.error('获取标签、列表成功,' + res.data.message)
+      message.error('获取标签、列表失败,' + res.data.message)
     }
   } catch (error) {
-    message.error('获取标签、列表成功发生错误，请重试')
+    message.error('获取标签、列表发生错误，请重试')
   }
 }
 onMounted(() => {
@@ -192,7 +195,10 @@ onMounted(() => {
  * 获取图片信息
  */
 const route = useRoute()
+const router = useRouter()
+
 const pictureId = route.query?.id
+const spaceId = route.query?.spaceId
 console.log('获取到的 id:', pictureId) // 添加这行代码来调试
 const getOldPictureInfo = async () => {
   if (!pictureId) {
@@ -200,7 +206,6 @@ const getOldPictureInfo = async () => {
     return
   } else {
     const res = await getPictureVoByIdUsingGet({
-      // @ts-ignore
       id: pictureId,
     })
     if (res.data.code === 0 && res.data.data) {

@@ -28,12 +28,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
-import type { UploadProps } from 'ant-design-vue'
-import { uploadPictureByUrlUsingPost, uploadPictureUsingPost } from '@/api/pictureController.ts'
+import { uploadPictureByUrlUsingPost } from '@/api/pictureController.ts'
 import { UploadOutlined } from '@ant-design/icons-vue'
 
 interface Props {
   picture?: API.PictureVO
+  spaceId?: any
   onSuccess?: (newPicture: API.PictureVO) => void
 }
 
@@ -58,6 +58,9 @@ const handleUpload = async () => {
     if (props.picture) {
       params.id = props.picture.id
     }
+    if (props.spaceId) {
+      params.spaceId = props.spaceId
+    }
     const res = await uploadPictureByUrlUsingPost(params)
     //@ts-ignore
     if (res.data.code === 0 && res.data.data) {
@@ -75,22 +78,6 @@ const handleUpload = async () => {
   }
 }
 
-/**
- * 上传文件之前校验
- * @param file
- */
-// @ts-ignore
-const beforeUpload = (file: UploadProps['fileList'][number]) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-  if (!isJpgOrPng) {
-    message.error('您只能上传 JPG 或 PNG 文件！')
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) {
-    message.error('图片大小必须小于 2MB！')
-  }
-  return isJpgOrPng && isLt2M
-}
 </script>
 
 <style scoped>
