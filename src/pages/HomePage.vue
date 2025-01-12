@@ -141,38 +141,6 @@ const doSearch = () => {
       :total="total"
       @change="onPageChange"
     />
-    <!--
-        &lt;!&ndash; 图片展示区 &ndash;&gt;
-        <a-list
-          :grid="{ gutter: 0, xs: 1, sm: 2, md: 5, lg: 4, xl: 5, xxl: 6 }"
-          :data-source="dataList"
-          :pagination="pagination"
-          :loading="loading"
-          style="padding: 0"
-        >
-          <template #renderItem="{ item: picture }">
-            <a-list-item>
-              &lt;!&ndash; 单张图片 &ndash;&gt;
-              <a-card hoverable @click="doClickPicture(picture.id)">
-                <template #cover>
-                  <img
-                    :alt="picture.picName"
-                    :src="picture.thumbnailUrl ?? picture.url"
-                    style="height: 180px; object-fit: cover"
-                  />
-                </template>
-                <a-card-meta :title="picture.picName" style="">
-                  <template #description>
-                    <a-flex>
-                      <a-tag color="blue">{{ picture.category ?? '默认' }}</a-tag>
-                      <a-tag v-for="tag in picture.tags" :key="tag" :color="'pink'">{{ tag }}</a-tag>
-                    </a-flex>
-                  </template>
-                </a-card-meta>
-              </a-card>
-            </a-list-item>
-          </template>
-        </a-list>-->
   </div>
 </template>
 

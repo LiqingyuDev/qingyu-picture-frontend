@@ -17,14 +17,15 @@
                 :src="picture.thumbnailUrl ?? picture.url"
                 loading="lazy"
               />
+              <!--              -->
             </template>
             <a-card-meta :title="picture.name">
               <template #description>
                 <a-flex>
-                  <a-tag color="green">
+                  <a-tag color="red">
                     {{ picture.category ?? '默认' }}
                   </a-tag>
-                  <a-tag v-for="tag in picture.tags" :key="tag">
+                  <a-tag color="green" v-for="tag in picture.tags" :key="tag">
                     {{ tag }}
                   </a-tag>
                 </a-flex>

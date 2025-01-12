@@ -33,10 +33,28 @@
               </a>
               <template #overlay>
                 <a-menu>
-                  <a-button type="default" style="width: 100%" @click="doLogout" danger>
-                    注销
-                    <LogoutOutlined />
-                  </a-button>
+                  <a-menu-item>
+                    <a-button type="link" size="small" style="width: 100%" @click="doLogout" danger>
+                      退出登录
+                      <LogoutOutlined />
+                    </a-button>
+                  </a-menu-item>
+                  <a-menu-item>
+                    <router-link to="/my_space">
+                      <a-button type="link" size="small" style="width: 100%">
+                        我的空间
+                        <FolderOpenOutlined />
+                      </a-button>
+                    </router-link>
+                  </a-menu-item>
+                  <a-menu-item>
+                    <router-link to="/setting">
+                      <a-button type="link" size="small" style="width: 100%">
+                        个人设置
+                        <SettingOutlined />
+                      </a-button>
+                    </router-link>
+                  </a-menu-item>
                 </a-menu>
               </template>
             </a-dropdown>
@@ -194,12 +212,6 @@ const originItems = [
     ],
   },
 
-  {
-    key: '/setting',
-    icon: () => h(SettingOutlined),
-    label: '设置',
-    title: '设置',
-  },
   {
     key: '/about',
     icon: () => h(InfoCircleOutlined),
