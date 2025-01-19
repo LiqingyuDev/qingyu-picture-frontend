@@ -33,7 +33,7 @@ import { UploadOutlined } from '@ant-design/icons-vue'
 
 interface Props {
   picture?: API.PictureVO
-  spaceId?: any
+  spaceId?: number
   onSuccess?: (newPicture: API.PictureVO) => void
 }
 

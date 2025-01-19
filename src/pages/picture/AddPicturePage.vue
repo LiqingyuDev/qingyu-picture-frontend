@@ -8,11 +8,12 @@
         <!-- 标题 -->
         <a-card :title="route.query?.id ? '编辑图片' : '上传图片'">
           <!--        空间-->
-          <a-typography-paragraph v-if="spaceId" type="econdary"
-            >上传至私有空间: <a :href="`/space/${spaceId}`">{{ spaceId }}</a></a-typography-paragraph
+          <a-typography-paragraph v-if="spaceId" type="secondary"
+            >上传至私有空间:
+            <a :href="`/space/${spaceId}`">{{ spaceId }}</a></a-typography-paragraph
           >
           <!--          图片上传组件-->
-          <PictureUpload :picture="picture"  :spaceId="spaceId" :on-success="onSuccess" />
+          <PictureUpload :picture="picture" :spaceId="spaceId" :on-success="onSuccess" />
         </a-card>
         <br />
       </a-col>

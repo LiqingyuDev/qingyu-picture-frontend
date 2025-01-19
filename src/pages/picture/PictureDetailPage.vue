@@ -92,7 +92,6 @@ import { EditOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icon
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 
 import { useRouter } from 'vue-router'
-import { saveAs } from 'file-saver'
 // 定义 props
 const props = defineProps<{
   id: number

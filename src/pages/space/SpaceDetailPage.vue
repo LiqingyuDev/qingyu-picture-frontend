@@ -29,7 +29,12 @@
           <!-- 空间内图片 -->
           <div style="text-align: center" class="image-container">
             <!-- 图片列表 -->
-            <PictureList :dataList="dataList" :loading="loading" />
+            <PictureList
+              :dataList="dataList"
+              :loading="loading"
+              :show-operation="true"
+              :on-reload="fetchData"
+            />
             <a-pagination
               style="text-align: right"
               v-model:current="searchParams.current"
@@ -93,7 +98,7 @@
             </a-descriptions-item>
           </a-descriptions>
 
-          <a-space wrap>
+<!--          <a-space wrap>
             <a-button v-if="canEdit" type="default" @click="doEdit">
               编辑
               <template #icon>
@@ -114,7 +119,7 @@
                 </template>
               </a-button>
             </a-popconfirm>
-          </a-space>
+          </a-space>-->
         </a-card>
       </a-col>
     </a-row>

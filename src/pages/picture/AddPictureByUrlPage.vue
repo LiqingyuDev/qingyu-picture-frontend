@@ -206,6 +206,7 @@ const getOldPictureInfo = async () => {
     return
   } else {
     const res = await getPictureVoByIdUsingGet({
+      // @ts-ignore
       id: pictureId,
     })
     if (res.data.code === 0 && res.data.data) {
