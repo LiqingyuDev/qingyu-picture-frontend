@@ -3,6 +3,7 @@
     <a-row :gutter="[16, 16]">
       <!-- 空间展示区 -->
       <a-col :sm="24" :md="16" :xl="18">
+        <PictureSearchForm :onSearch="onSearch" />
         <a-card title="空间预览">
           <template #extra>
             <a-space>
@@ -27,7 +28,7 @@
             </a-space>
           </template>
           <!-- 空间内图片 -->
-          <div style="text-align: center" class="image-container">
+          <div style="text-align: left" class="image-container">
             <!-- 图片列表 -->
             <PictureList
               :dataList="dataList"
@@ -97,29 +98,6 @@
               {{ space.updateTime ? new Date(space.updateTime).toLocaleString() : '-' }}
             </a-descriptions-item>
           </a-descriptions>
-
-<!--          <a-space wrap>
-            <a-button v-if="canEdit" type="default" @click="doEdit">
-              编辑
-              <template #icon>
-                <EditOutlined />
-              </template>
-            </a-button>
-            <a-popconfirm
-              title="确定要删除该空间吗？"
-              @confirm="doDelete()"
-              ok-text="删除"
-              cancel-text="取消"
-              class="button-spacing"
-            >
-              <a-button v-if="canEdit" danger>
-                删除
-                <template #icon>
-                  <DeleteOutlined />
-                </template>
-              </a-button>
-            </a-popconfirm>
-          </a-space>-->
         </a-card>
       </a-col>
     </a-row>
@@ -136,6 +114,7 @@ import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { useRouter } from 'vue-router'
 import PictureList from '@/components/PictureList.vue'
 import { listPictureVoByPageUsingPost } from '@/api/pictureController.ts'
+import PictureSearchForm from '@/components/PictureSearchForm.vue'
 
 // 定义 props
 const props = defineProps<{
@@ -147,22 +126,11 @@ const space = ref<API.SpaceVO>({})
 const loading = ref(true)
 const dataList = ref<API.PictureVO[]>([])
 const total = ref(0)
-const searchParams = reactive<API.PictureQueryRequest>({
+const searchParams = ref<API.PictureQueryRequest>({
   current: 1,
   pageSize: 12,
   sortField: 'createTime',
   sortOrder: 'descend',
-})
-
-// 计算属性
-const canEdit = computed(() => {
-  let loginUser = loginUserStore.loginUser
-  if (!loginUser.id) {
-    return false
-  }
-  // 判断是否是作者或管理员
-  const user = space.value.user
-  return user?.id === loginUser.id || loginUser.userRole === 'admin'
 })
 
 // 生命周期钩子
@@ -194,7 +162,7 @@ const fetchData = async () => {
   try {
     // 转换标签分类的搜索参数
     const params = {
-      ...searchParams,
+      ...searchParams.value,
       spaceId: props.id,
     }
 
@@ -214,44 +182,20 @@ const fetchData = async () => {
 
 // 分页改变时的处理方法
 const onPageChange = (page: number, pageSize: number) => {
-  searchParams.current = page
-  searchParams.pageSize = pageSize
+  searchParams.value.current = page
+  searchParams.value.pageSize = pageSize
+  fetchData()
+}
+//搜索
+const onSearch = (newSearchParams: API.PictureQueryRequest) => {
+  searchParams.value = {
+    ...searchParams.value,
+    ...newSearchParams,
+    current: 1,
+  }
   fetchData()
 }
 
-// 删除空间
-const doDelete = async () => {
-  const id = space.value?.id
-  if (!id) {
-    message.error('空间不存在')
-    return
-  }
-  const res = await deleteSpaceUsingPost({ id })
-  if (res.data.code === 0 && res.data.data) {
-    // 跳转回首页
-    await router.push({
-      path: '/',
-    })
-    message.success('删除成功')
-  } else {
-    message.error('删除失败, ' + res.data.message)
-  }
-}
-
-// 编辑空间
-const doEdit = () => {
-  const id = space.value?.id
-  if (!id) {
-    message.error('空间不存在')
-    return
-  }
-  router.push(`/add_space/direct?id=${space.value.id}`)
-}
-// 获取路由对象
-const router = useRouter()
-
-// 获取登录用户信息
-const loginUserStore = useLoginUserStore()
 </script>
 
 <style scoped>

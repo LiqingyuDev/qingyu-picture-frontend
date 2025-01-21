@@ -13,12 +13,12 @@
             <template #cover>
               <img
                 style="height: 180px; object-fit: cover"
-                :alt="picture.name"
+                :alt="picture.picName"
                 :src="picture.thumbnailUrl ?? picture.url"
                 loading="lazy"
               />
             </template>
-            <a-card-meta :title="picture.name">
+            <a-card-meta :title="picture.picName">
               <template #description>
                 <a-flex>
                   <a-tag color="red">
