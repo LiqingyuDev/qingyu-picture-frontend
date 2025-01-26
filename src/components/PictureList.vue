@@ -36,6 +36,10 @@
                 <edit-outlined />
                 编辑
               </a-space>
+              <a-space @click="(e: Event) => doSearchPictureByPicture(picture, e)">
+                <ChromeOutlined />
+                搜索
+              </a-space>
               <a-space @click="(e: Event) => doDelete(picture, e)">
                 <delete-outlined />
                 删除
@@ -50,7 +54,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { EditOutlined, ChromeOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { deletePictureUsingPost } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
 
@@ -86,6 +90,11 @@ const doEdit = (picture: API.PictureVO, e: Event) => {
     },
   })
 }
+//以图搜图
+const doSearchPictureByPicture = (picture: API.PictureVO, e: Event) => {
+  e.stopPropagation()
+  window.open(`/search_picture?pictureId=${picture.id}`)
+}
 
 // 删除图片
 const doDelete = async (picture: API.PictureVO, e: Event) => {
@@ -101,7 +110,7 @@ const doDelete = async (picture: API.PictureVO, e: Event) => {
     const res = await deletePictureUsingPost({ id })
     if (res.data.code === 0 && res.data.data) {
       message.success('删除成功')
-       props.onReload?.()
+      props.onReload?.()
     } else {
       message.error(`删除失败: ${res.data.message || '未知错误'}`)
     }
