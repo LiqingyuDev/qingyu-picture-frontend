@@ -46,6 +46,7 @@
           </div>
         </a-card>
       </a-col>
+
       <!-- 空间信息区 -->
       <a-col :sm="24" :md="8" :xl="6">
         <a-card title="空间信息">
@@ -100,21 +101,21 @@
           </a-descriptions>
         </a-card>
       </a-col>
+
     </a-row>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, reactive } from 'vue'
+import { ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { deleteSpaceUsingPost, getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
+import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 import { formatSize } from '@/util'
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
-import { useRouter } from 'vue-router'
+import {  PlusOutlined } from '@ant-design/icons-vue'
 import PictureList from '@/components/PictureList.vue'
 import { listPictureVoByPageUsingPost } from '@/api/pictureController.ts'
 import PictureSearchForm from '@/components/PictureSearchForm.vue'
+
 
 // 定义 props
 const props = defineProps<{
@@ -195,7 +196,6 @@ const onSearch = (newSearchParams: API.PictureQueryRequest) => {
   }
   fetchData()
 }
-
 </script>
 
 <style scoped>

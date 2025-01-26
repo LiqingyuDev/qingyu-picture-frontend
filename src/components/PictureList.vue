@@ -32,31 +32,43 @@
             </a-card-meta>
 
             <template #actions v-if="showOperation == true">
-              <a-space @click="(e: Event) => doEdit(picture, e)">
-                <edit-outlined />
-                编辑
-              </a-space>
-              <a-space @click="(e: Event) => doSearchPictureByPicture(picture, e)">
-                <ChromeOutlined />
-                搜索
-              </a-space>
-              <a-space @click="(e: Event) => doDelete(picture, e)">
-                <delete-outlined />
-                删除
-              </a-space>
+              <a-tooltip title="编辑">
+                <edit-outlined @click="(e: Event) => doEdit(picture, e)" />
+              </a-tooltip>
+
+              <a-tooltip title="搜索">
+                <ChromeOutlined @click="(e: Event) => doSearchPictureByPicture(picture, e)" />
+              </a-tooltip>
+
+              <a-tooltip title="删除">
+                <delete-outlined @click="(e: Event) => doDelete(picture, e)" />
+              </a-tooltip>
+
+              <a-tooltip title="分享">
+                <ShareAltOutlined @click="(e: Event) => doShare(picture, e)" />
+              </a-tooltip>
             </template>
           </a-card>
         </a-list-item>
       </template>
     </a-list>
   </div>
+  <!-- 图片分享     -->
+  <share-modal ref="shareModalRef" :link="shareLink" />
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { EditOutlined, ChromeOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import {
+  EditOutlined,
+  ChromeOutlined,
+  DeleteOutlined,
+  ShareAltOutlined,
+} from '@ant-design/icons-vue'
 import { deletePictureUsingPost } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
+import ShareModal from '@/components/modal/ShareModal.vue'
+import { ref } from 'vue'
 
 interface Props {
   dataList?: API.PictureVO[]
@@ -105,7 +117,7 @@ const doDelete = async (picture: API.PictureVO, e: Event) => {
     message.error('图片不存在')
     return
   }
-
+  // 删除图片
   try {
     const res = await deletePictureUsingPost({ id })
     if (res.data.code === 0 && res.data.data) {
@@ -116,6 +128,18 @@ const doDelete = async (picture: API.PictureVO, e: Event) => {
     }
   } catch (error) {
     message.error('删除图片时发生错误，请稍后再试')
+  }
+}
+
+// 分享
+const shareModalRef = ref()
+// 分享链接
+const shareLink = ref<string>()
+const doShare = (picture: API.PictureVO, e: Event) => {
+  e.stopPropagation()
+  shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.id}`
+  if (shareModalRef.value) {
+    shareModalRef.value.openModal()
   }
 }
 </script>
