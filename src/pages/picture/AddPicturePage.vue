@@ -6,17 +6,33 @@
       <!-- 图片展示区 -->
       <a-col :sm="24" :md="16" :xl="18">
         <!-- 标题 -->
-        <a-card :title="route.query?.id ? '编辑图片' : '上传图片'">
+        <a-card :title="route.query?.id ? '图片预览' : '上传图片'">
+          <template #extra>
+            <a-button type="primary" @click="editPicture">
+              <edit-outlined />
+              编辑图片
+            </a-button>
+          </template>
           <!--        空间-->
           <a-typography-paragraph v-if="spaceId" type="secondary"
             >上传至私有空间:
-            <a :href="`/space/${spaceId}`">{{ spaceId }}</a></a-typography-paragraph
-          >
+            <a :href="`/space/${spaceId}`">{{ spaceId }}</a>
+          </a-typography-paragraph>
           <!--          图片上传组件-->
           <PictureUpload :picture="picture" :spaceId="spaceId" :on-success="onSuccess" />
         </a-card>
-        <br />
       </a-col>
+
+      <!--      :imageUrl="picture?.url"-->
+      <!--      image-url="https://picsum.photos/id/237/300/200"-->
+      <!--    编辑图片的组件-->
+      <ImageCropper
+        ref="imageCropperRef"
+        :picture="picture"
+        :spaceId="spaceId"
+        :onSuccess="onCropSuccess"
+      />
+
       <!-- 图片信息区 -->
       <a-col :sm="24" :md="8" :xl="6">
         <a-card v-if="picture" title="图片信息">
@@ -103,9 +119,10 @@ import {
   getPictureVoByIdUsingGet,
   listPictureTagCategoryUsingGet,
 } from '@/api/pictureController.ts'
-import { CloudUploadOutlined, ReloadOutlined } from '@ant-design/icons-vue'
+import { CloudUploadOutlined, EditOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 
 import { useRoute, useRouter } from 'vue-router'
+import ImageCropper from '@/components/modal/ImageCropper.vue'
 
 // 定义一个响应式的 picture 变量，用于存储上传的图片信息
 const picture = ref<API.PictureVO>()
@@ -113,6 +130,11 @@ const picture = ref<API.PictureVO>()
 // 定义 onSuccess 回调函数，当图片上传成功时更新 picture 的值
 const onSuccess = (newPicture: API.PictureVO) => {
   // 更新 picture 的值为新上传的图片信息
+  picture.value = newPicture
+  pictureForm.value.picName = newPicture.picName
+}
+const onCropSuccess = (newPicture: API.PictureVO) => {
+  // 更新 picture 的值为新修改的图片信息
   picture.value = newPicture
   pictureForm.value.picName = newPicture.picName
 }
@@ -133,7 +155,7 @@ const handleSubmit = async (values: any) => {
     if (res.data.code === 0 && res.data.data) {
       message.success('编辑成功')
       //跳转到详情页
-      router.push({
+      await router.push({
         path: `/picture/${pictureId}`,
       })
     } else {
@@ -227,6 +249,14 @@ const getOldPictureInfo = async () => {
 onMounted(() => {
   getOldPictureInfo()
 })
+
+//图片裁切相关
+const imageCropperRef = ref()
+const editPicture = () => {
+  if (imageCropperRef.value) {
+    imageCropperRef.value.openModal()
+  }
+}
 </script>
 
 <style scoped>

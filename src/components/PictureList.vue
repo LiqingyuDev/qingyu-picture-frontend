@@ -53,7 +53,7 @@
       </template>
     </a-list>
   </div>
-  <!-- 图片分享     -->
+  <!-- 图片分享对话框     -->
   <share-modal ref="shareModalRef" :link="shareLink" />
 </template>
 

@@ -7,10 +7,6 @@ const open = ref<boolean>(false)
 const openModal = () => {
   open.value = true
 }
-//关闭对话框
-const closeModal = () => {
-  open.value = false
-}
 /**
  * 组件接收一个link属性，用于显示图片链接
  */
@@ -31,8 +27,6 @@ defineExpose({
 <template>
   <!--二维码分享对话框-->
   <div class="share-modal">
-    <!--    <div type="primary" @click="openModal">Open Modal</div>-->
-
     <a-modal v-model:open="open" title="分享图片" :footer="false">
       <p />
       <h3>图片链接:</h3>

@@ -16,6 +16,23 @@ import GlobalHeader from '@/components/GlobalHeader.vue'
       </a-layout-footer>
     </a-layout>
   </div>
+  <!--  主题色-->
+  <a-config-provider
+    :theme="{
+      token: {
+        colorPrimary: '#4caf50', // 绿色
+        colorTextBase: '#333333', // 深灰色
+        colorLink: '#2196f3', // 蓝色
+        colorError: '#f44336', // 红色
+        colorWarning: '#ff9800', // 橙色
+        colorSuccess: '#4caf50', // 绿色
+        colorInfo: '#2196f3', // 蓝色
+        colorBorderBase: '#e0e0e0', // 浅灰色
+      },
+    }"
+  >
+    <a-button />
+  </a-config-provider>
 </template>
 
 <style scoped>
@@ -49,12 +66,6 @@ import GlobalHeader from '@/components/GlobalHeader.vue'
   animation: gradientAnimation 10s ease infinite; /* 设置动画持续时间、过渡效果和重复次数 */
   padding: 20px;
 }
-
-/*#basicLayout .content {
-  background-image: linear-gradient(-225deg, #69eacb 0%, #eaccf8 48%, #6654f1 100%);
-  margin-bottom: 16px;
-  padding: 20px;
-}*/
 
 #basicLayout .footer {
   background: rgba(255, 255, 255, 0.81); /* 半透明白色背景 */
