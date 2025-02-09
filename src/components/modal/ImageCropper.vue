@@ -1,6 +1,6 @@
 <template>
   <!-- 弹窗组件 -->
-  <a-modal v-model:open="open" title="裁切弹窗" :footer="false">
+  <a-modal v-model:open="open" title="图片裁切" :footer="false">
     <div class="image-cropper">
       <!-- 图片裁切组件 -->
       <vue-cropper
@@ -19,8 +19,8 @@
         <a-space>
           <a-button @click="rotateLeft">左旋<RotateLeftOutlined /></a-button>
           <a-button @click="rotateRight">右旋<RotateRightOutlined /></a-button>
-          <a-button @click="changeScale(1)"><ArrowsAltOutlined />放大</a-button>
-          <a-button @click="changeScale(-1)"><ShrinkOutlined />缩小</a-button>
+          <a-button @click="changeScale(1)"><ZoomInOutlined />放大</a-button>
+          <a-button @click="changeScale(-1)"><ZoomOutOutlined />缩小</a-button>
           <a-button type="primary" :loading="loading" @click="handleConfirm"><CheckCircleOutlined />确认</a-button>
         </a-space>
       </div>
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { defineExpose, ref, computed } from 'vue'
 import { message } from 'ant-design-vue'
-import { RotateLeftOutlined, RotateRightOutlined, ArrowsAltOutlined,ShrinkOutlined,CheckCircleOutlined} from '@ant-design/icons-vue';
+import { RotateLeftOutlined, RotateRightOutlined, ZoomInOutlined ,ZoomOutOutlined,ShrinkOutlined,CheckCircleOutlined} from '@ant-design/icons-vue';
 import { uploadPictureUsingPost } from '@/api/pictureController.ts'
 
 // region 弹窗逻辑
@@ -56,7 +56,6 @@ const loading = ref<boolean>(false)
 // 使用 computed 动态获取 imageUrl
 const imageUrl = computed(() => props.picture?.url || '')
 
-console.log('imageUrl', imageUrl)
 
 // 暴露 openModal 函数给父组件
 defineExpose({

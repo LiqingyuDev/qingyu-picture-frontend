@@ -8,10 +8,16 @@
         <!-- 标题 -->
         <a-card :title="route.query?.id ? '图片预览' : '上传图片'">
           <template #extra>
-            <a-button type="primary" @click="editPicture">
-              <edit-outlined />
-              编辑图片
-            </a-button>
+            <a-space>
+              <a-button type="primary" @click="editPicture">
+                <ScissorOutlined />
+                裁切图片
+              </a-button>
+              <a-button type="primary" @click="imageOutPaintingPicture">
+                <ArrowsAltOutlined />
+                AI扩图
+              </a-button>
+            </a-space>
           </template>
           <!--        空间-->
           <a-typography-paragraph v-if="spaceId" type="secondary"
@@ -23,13 +29,17 @@
         </a-card>
       </a-col>
 
-      <!--      :imageUrl="picture?.url"-->
-      <!--      image-url="https://picsum.photos/id/237/300/200"-->
-      <!--    编辑图片的组件-->
+      <!--    裁切图片的组件-->
       <ImageCropper
         ref="imageCropperRef"
         :picture="picture"
         :spaceId="spaceId"
+        :onSuccess="onCropSuccess"
+      />
+      <!--    AI扩图的组件-->
+      <ImageOutPainting
+        ref="imageOutPaintingRef"
+        :picture="picture"
         :onSuccess="onCropSuccess"
       />
 
@@ -119,10 +129,16 @@ import {
   getPictureVoByIdUsingGet,
   listPictureTagCategoryUsingGet,
 } from '@/api/pictureController.ts'
-import { CloudUploadOutlined, EditOutlined, ReloadOutlined } from '@ant-design/icons-vue'
+import {
+  CloudUploadOutlined,
+  ScissorOutlined,
+  ReloadOutlined,
+  ArrowsAltOutlined,
+} from '@ant-design/icons-vue'
 
 import { useRoute, useRouter } from 'vue-router'
 import ImageCropper from '@/components/modal/ImageCropper.vue'
+import ImageOutPainting from '@/components/modal/ImageOutPainting.vue'
 
 // 定义一个响应式的 picture 变量，用于存储上传的图片信息
 const picture = ref<API.PictureVO>()
@@ -255,6 +271,14 @@ const imageCropperRef = ref()
 const editPicture = () => {
   if (imageCropperRef.value) {
     imageCropperRef.value.openModal()
+  }
+}
+
+//AI扩图相关
+const imageOutPaintingRef = ref()
+const imageOutPaintingPicture = () => {
+  if (imageOutPaintingRef.value) {
+    imageOutPaintingRef.value.openModal()
   }
 }
 </script>
