@@ -13,6 +13,8 @@ import AddSpacePage from '@/pages/space/AddSpacePage.vue'
 import MySpacePage from '@/pages/space/MySpacePage.vue'
 import SpaceDetailPage from '@/pages/space/SpaceDetailPage.vue'
 import SearchPicturePage from '@/pages/picture/SearchPicturePage.vue'
+import MyTeamListPage from '@/pages/space/MyTeamListPage.vue'
+import SpaceUserManagePage from '@/pages/space/SpaceUserManagePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,11 +90,23 @@ const router = createRouter({
       component: MySpacePage,
     },
     {
+      path: '/my_team_list',
+      name: '我的团队',
+      component: MyTeamListPage,
+    },
+    {
       path: '/space/:id',
       name: '空间详情',
       component: SpaceDetailPage,
       props: true,
     },
+    {
+      path: '/spaceUserManage/:id',
+      name: '空间成员管理',
+      component: SpaceUserManagePage,
+      props: true,
+    },
+
 
     {
       path: '/about',

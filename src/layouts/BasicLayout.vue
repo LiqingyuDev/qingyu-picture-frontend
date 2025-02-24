@@ -12,7 +12,7 @@ import GlobalHeader from '@/components/GlobalHeader.vue'
         <router-view />
       </a-layout-content>
       <a-layout-footer class="footer">
-        <div>© 2024 轻语. All rights reserved.</div>
+        <div>© 2025 轻语. All rights reserved.</div>
       </a-layout-footer>
     </a-layout>
   </div>

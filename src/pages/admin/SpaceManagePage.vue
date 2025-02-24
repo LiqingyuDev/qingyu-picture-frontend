@@ -29,6 +29,16 @@
             style="width: 150px"
           />
         </a-form-item>
+        <a-form-item label="空间类别" name="spaceType">
+          <a-select
+            v-model:value="searchParams.spaceType"
+            :options="SPACE_TYPE_OPTIONS"
+            placeholder="请输入空间类别"
+            style="min-width: 180px"
+            allow-clear
+          />
+        </a-form-item>
+
         <a-form-item label="空间名称">
           <a-input
             v-model:value="searchParams.spaceName"
@@ -41,10 +51,10 @@
             <SearchOutlined />
             搜索
           </a-button>
-          <a-button type="default" @click="doReset" style="margin-right: 8px" danger>
-            <ReloadOutlined />
-            重置
-          </a-button>
+<!--          <a-button type="default" @click="doReset" style="margin-right: 8px" danger>-->
+<!--            <ReloadOutlined />-->
+<!--            重置-->
+<!--          </a-button>-->
         </a-form-item>
       </a-form>
     </a-card>
@@ -72,6 +82,14 @@
             <a-tag>{{ SPACE_LEVEL_MAP[record.spaceLevel] }}</a-tag>
           </div>
         </template>
+        <!-- 空间类别 -->
+        <template v-else-if="column.dataIndex === 'spaceType'">
+          <!-- 空间类别 -->
+          <template v-if="column.dataIndex === 'spaceType'">
+            <a-tag>{{ SPACE_TYPE_MAP[record.spaceType] }}</a-tag>
+          </template>
+
+        </template>
         <!-- 时间格式化 -->
         <template v-else-if="column.dataIndex === 'createTime'">
           {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
@@ -84,7 +102,7 @@
         </template>
         <!-- 可编辑字段 -->
         <template
-          v-else-if="['spaceName', 'spaceLevel', 'maxSize', 'maxCount'].includes(column.dataIndex)"
+          v-else-if="['spaceName', 'spaceLevel','maxSize', 'maxCount'].includes(column.dataIndex)"
         >
           <div>
             <a-input
@@ -135,7 +153,6 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
 import {
-  ReloadOutlined,
   SearchOutlined,
   EditOutlined,
   DeleteOutlined,
@@ -147,7 +164,7 @@ import {
   listSpaceVoByPageUsingPost,
   updateSpaceUsingPost,
 } from '@/api/spaceController.ts'
-import { SPACE_LEVEL_MAP, SPACE_LEVEL_OPTIONS } from '../../constants/space.ts'
+import { SPACE_LEVEL_MAP, SPACE_LEVEL_OPTIONS, SPACE_TYPE_MAP, SPACE_TYPE_OPTIONS } from '../../constants/space.ts'
 
 // 定义搜索参数
 const searchParams = reactive<API.SpaceQueryRequest>({
@@ -156,13 +173,12 @@ const searchParams = reactive<API.SpaceQueryRequest>({
   sortField: 'createTime',
   sortOrder: 'ascend',
 })
-//新建空间
-const handleAdd = () => {}
 // 定义表格列
 const columns = [
-  { title: '空间ID', dataIndex: 'id', width: '12%' },
+  { title: '空间ID', dataIndex: 'id', width: '5%' },
   { title: '空间名称', dataIndex: 'spaceName' },
   { title: '空间级别', dataIndex: 'spaceLevel', width: '5%' },
+  { title: '空间类别', dataIndex: 'spaceType', width: '5%' },
   { title: '最大总大小', dataIndex: 'maxSize' },
   { title: '最大数量', dataIndex: 'maxCount' },
   { title: '当前总大小', dataIndex: 'totalSize' },
@@ -207,14 +223,6 @@ const fetchData = async () => {
   } else {
     message.error(`查询列表数据失败, ${res.data.message}`)
   }
-}
-
-// 重置搜索条件
-const doReset = () => {
-  searchParams.spaceName = ''
-  searchParams.spaceLevel = 0
-  searchParams.current = 1
-  fetchData()
 }
 
 // 搜索空间
@@ -300,7 +308,7 @@ onMounted(() => {
 }
 
 .search-form {
-  width: 50%;
+  width: 80%;
   justify-content: center;
   margin: 0 auto;
 }

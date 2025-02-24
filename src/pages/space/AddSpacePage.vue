@@ -20,6 +20,16 @@
                 allow-clear
               />
             </a-form-item>
+            <a-form-item label="空间类型" name="spaceType">
+              <a-select
+                v-model:value="formData.spaceType"
+                :options="SPACE_TYPE_OPTIONS"
+                placeholder="请输入空间类型"                style="min-width: 180px"
+                allow-clear
+              />
+            </a-form-item>
+
+
             <a-form-item>
               <a-button
                 type="primary"
@@ -54,18 +64,21 @@
 import { onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { addSpaceUsingPost, listSpaceLevelUsingGet } from '@/api/spaceController.ts'
-import { useRouter } from 'vue-router'
-import { SPACE_LEVEL_ENUM, SPACE_LEVEL_OPTIONS } from '@/constants/space.ts'
-import { formatSize } from '../../util'
-
-const formData = reactive<API.SpaceUpdateRequest | API.SpaceAddRequest>({
-  spaceName: '',
-  spaceLevel: SPACE_LEVEL_ENUM.COMMON,
-})
-const loading = ref(false)
+import { useRoute, useRouter } from 'vue-router'
+import { SPACE_LEVEL_ENUM, SPACE_LEVEL_OPTIONS, SPACE_TYPE_ENUM, SPACE_TYPE_OPTIONS } from '@/constants/space.ts'
+import { formatSize } from '@/util'
 
 const router = useRouter()
 
+
+
+const formData = reactive({
+  spaceName: '',
+  spaceLevel: SPACE_LEVEL_ENUM.COMMON,
+  spaceType: SPACE_TYPE_ENUM.PRIVATE,
+})
+
+const loading = ref(false)
 const spaceLevelList = ref<API.SpaceLevel[]>([])
 
 // 获取空间级别

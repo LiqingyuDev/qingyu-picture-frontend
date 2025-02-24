@@ -31,7 +31,7 @@
               </template>
             </a-card-meta>
 
-            <template #actions v-if="showOperation == true">
+            <template #actions v-if="showOperation&&canEdit">
               <a-tooltip title="编辑">
                 <edit-outlined @click="(e: Event) => doEdit(picture, e)" />
               </a-tooltip>
@@ -40,7 +40,7 @@
                 <ChromeOutlined @click="(e: Event) => doSearchPictureByPicture(picture, e)" />
               </a-tooltip>
 
-              <a-tooltip title="删除">
+              <a-tooltip v-if="canDelete" title="删除">
                 <delete-outlined @click="(e: Event) => doDelete(picture, e)" />
               </a-tooltip>
 
@@ -75,11 +75,16 @@ interface Props {
   loading?: boolean
   showOperation?: boolean
   onReload?: () => void
+  canEdit?: boolean
+  canDelete?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   dataList: () => [],
   loading: false,
+  showOperation: false,
+  canEdit: false,
+  canDelete: false,
 })
 
 // 跳转至图片详情
