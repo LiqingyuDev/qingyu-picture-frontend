@@ -4,10 +4,11 @@
       <!-- 空间展示区 -->
       <a-col :sm="24" :md="16" :xl="18">
         <PictureSearchForm :onSearch="onSearch" />
-        <a-card title="空间预览">
+        <a-card :title="space.spaceName">
           <template #extra>
             <a-space>
               <a-button
+                v-if="canUploadPicture"
                 type="primary"
                 :href="`/add_picture/direct?spaceId=${id}`"
                 target="_blank"
@@ -17,6 +18,7 @@
                 添加图片
               </a-button>
               <a-button
+                v-if="canUploadPicture"
                 type="primary"
                 :href="`/add_picture/url?spaceId=${id}`"
                 target="_blank"
@@ -24,6 +26,16 @@
               >
                 <PlusOutlined />
                 通过URL添加图片
+              </a-button>
+              <a-button
+                v-if="canManageSpaceUser"
+                type="primary"
+                ghost
+                :icon="h(TeamOutlined)"
+                :href="`/spaceUserManage/${id}`"
+                target="_blank"
+              >
+                成员管理
               </a-button>
             </a-space>
           </template>
@@ -35,6 +47,8 @@
               :loading="loading"
               :show-operation="true"
               :on-reload="fetchData"
+              :canEdit="canEditPicture"
+              :canDelete="canDeletePicture"
             />
             <a-pagination
               style="text-align: right"
@@ -101,26 +115,38 @@
           </a-descriptions>
         </a-card>
       </a-col>
-
     </a-row>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, h, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 import { formatSize } from '@/util'
-import {  PlusOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, TeamOutlined } from '@ant-design/icons-vue'
 import PictureList from '@/components/PictureList.vue'
 import { listPictureVoByPageUsingPost } from '@/api/pictureController.ts'
 import PictureSearchForm from '@/components/PictureSearchForm.vue'
-
+import { SPACE_PERMISSION_ENUM } from '@/constants/space.ts'
 
 // 定义 props
 const props = defineProps<{
   id: number
 }>()
+//空间权限相关
+// 通用权限检查函数
+function createPermissionChecker(permission: string) {
+  return computed(() => {
+    return (space.value.permissionList ?? []).includes(permission)
+  })
+}
+
+// 定义权限检查
+const canManageSpaceUser = createPermissionChecker(SPACE_PERMISSION_ENUM.SPACE_USER_MANAGE)
+const canUploadPicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_UPLOAD)
+const canEditPicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_EDIT)
+const canDeletePicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_DELETE)
 
 // 定义响应式变量
 const space = ref<API.SpaceVO>({})

@@ -33,17 +33,6 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-
-/**
- * 上传图片
- * @param file
- */
-interface UploadResponseData {
-  code: number
-  message: string
-  data: any
-}
-
 const handleUpload = async ({ file }: any) => {
   loading.value = true
   try {

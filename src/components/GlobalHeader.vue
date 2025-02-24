@@ -5,7 +5,7 @@
         <router-link to="/">
           <div class="title-bar">
             <img class="logo" src="~@/assets/logo.png" alt="logo" />
-            <div class="title">轻语云图库</div>
+            <div class="title">万象云影</div>
           </div>
         </router-link>
       </a-col>
@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-import { h, ref, computed } from 'vue'
+import { h, ref, computed, watchEffect } from 'vue'
 // @ts-ignore
 import { MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
@@ -104,8 +104,9 @@ import {
 
 const router = useRouter()
 
-const doMenuClick = ({ key }: any) => {
-  router.push({ path: key })
+// 路由跳转事件
+const doMenuClick = ({ key }: { key: string }) => {
+  router.push(key)
 }
 
 // 注销
@@ -129,17 +130,17 @@ const doLogout = async () => {
 const current = ref<string[]>(['/'])
 
 // 更新高亮菜单
-router.afterEach((to, from, next) => {
+router.afterEach((to,) => {
   current.value = [to.path]
 })
 
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { userLogoutUsingPost } from '@/api/userController.ts'
-import SpaceDetailPage from '@/pages/space/SpaceDetailPage.vue'
+import { SPACE_TYPE_ENUM } from '@/constants/space.ts'
 
 const loginUserStore = useLoginUserStore()
 
-const originItems = [
+const fixedMenuItems = [
   {
     key: '/',
     icon: () => h(HomeOutlined),
@@ -211,7 +212,25 @@ const originItems = [
       },
     ],
   },
-
+  {
+    icon: () => h(LockOutlined),
+    label: '团队空间',
+    title: '团队空间',
+    children: [
+      {
+        key: '/add_space?type=' + SPACE_TYPE_ENUM.TEAM,
+        label: '创建团队',
+        title: '创建空间',
+        icon: () => h(TeamOutlined),
+      },
+      {
+        key: '/my_team_list',
+        label: '我的团队',
+        title: '我的团队',
+        icon: () => h(TeamOutlined),
+      },
+    ],
+  },
   {
     key: '/about',
     icon: () => h(InfoCircleOutlined),
@@ -242,9 +261,8 @@ const filterMenus = (menus: MenuProps['items'] = []) => {
     return false
   })
 }
-
 // 展示在菜单的路由数组
-const items = computed<MenuProps['items']>(() => filterMenus(originItems))
+const items = computed<MenuProps['items']>(() => filterMenus(fixedMenuItems))
 </script>
 
 <style scoped>

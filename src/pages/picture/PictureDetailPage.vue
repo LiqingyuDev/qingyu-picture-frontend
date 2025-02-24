@@ -63,7 +63,7 @@
               cancel-text="取消"
               class="button-spacing"
             >
-              <a-button v-if="canEdit" danger
+              <a-button v-if="canDelete" danger
                 >删除
                 <template #icon>
                   <DeleteOutlined />
@@ -106,10 +106,22 @@ import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 
 import { useRouter } from 'vue-router'
 import ShareModal from '@/components/modal/ShareModal.vue'
+import { SPACE_PERMISSION_ENUM } from '@/constants/space.ts'
 // 定义 props
 const props = defineProps<{
   id: number
 }>()
+//权限相关
+// 通用权限检查函数
+function createPermissionChecker(permission: string) {
+  return computed(() => {
+    return (picture.value.permissionList ?? []).includes(permission)
+  })
+}
+
+// 定义权限检查
+const canEdit = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_EDIT)
+const canDelete = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_DELETE)
 
 // 获取路由对象
 // 定义响应式变量
@@ -142,15 +154,6 @@ onMounted(() => {
 
 const loginUserStore = useLoginUserStore()
 
-const canEdit = computed(() => {
-  let loginUser = loginUserStore.loginUser
-  if (!loginUser.id) {
-    return false
-  }
-  // 判断是否是作者或管理员
-  const user = picture.value.user
-  return user?.id === loginUser.id || loginUser.userRole === 'admin'
-})
 // 点击图片跳转至图片详情
 const router = useRouter()
 // 删除图片
