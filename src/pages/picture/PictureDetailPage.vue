@@ -95,7 +95,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import { deletePictureUsingPost, getPictureVoByIdUsingGet } from '@/api/pictureController.ts'
-import { downloadImage, formatSize } from '@/util'
+import { downloadImage, formatSize } from '../../utils'
 import {
   EditOutlined,
   DeleteOutlined,

@@ -40,7 +40,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { getPictureVoByIdUsingGet, searchPictureByPictureUsingPost } from '@/api/pictureController'
 import { message } from 'ant-design-vue'
-import { formatSize } from '@/util'
+import { formatSize } from '../../utils'
 
 const route = useRoute()
 

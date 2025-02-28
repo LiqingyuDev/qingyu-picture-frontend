@@ -123,7 +123,7 @@
 import { ref, onMounted, h, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
-import { formatSize } from '@/util'
+import { formatSize } from '../../utils'
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons-vue'
 import PictureList from '@/components/PictureList.vue'
 import { listPictureVoByPageUsingPost } from '@/api/pictureController.ts'

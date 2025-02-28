@@ -34,6 +34,7 @@
         ref="imageCropperRef"
         :picture="picture"
         :spaceId="spaceId"
+        :space="space"
         :onSuccess="onCropSuccess"
       />
       <!--    AI扩图的组件-->
@@ -122,7 +123,7 @@
 </template>
 <script setup lang="ts">
 import PictureUpload from '@/components/PictureUpload.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { message } from 'ant-design-vue'
 import {
   editPictureUsingPost,
@@ -139,6 +140,7 @@ import {
 import { useRoute, useRouter } from 'vue-router'
 import ImageCropper from '@/components/modal/ImageCropper.vue'
 import ImageOutPainting from '@/components/modal/ImageOutPainting.vue'
+import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 
 // 定义一个响应式的 picture 变量，用于存储上传的图片信息
 const picture = ref<API.PictureVO>()
@@ -273,6 +275,25 @@ const editPicture = () => {
     imageCropperRef.value.openModal()
   }
 }
+
+const space = ref<API.SpaceVO>()
+
+// 获取空间信息
+const fetchSpace = async () => {
+  // 获取数据
+  if (spaceId) {
+    const res = await getSpaceVoByIdUsingGet({
+      id: spaceId,
+    })
+    if (res.data.code === 0 && res.data.data) {
+      space.value = res.data.data
+    }
+  }
+}
+
+watchEffect(() => {
+  fetchSpace()
+})
 
 //AI扩图相关
 const imageOutPaintingRef = ref()

@@ -66,7 +66,7 @@ import { message } from 'ant-design-vue'
 import { addSpaceUsingPost, listSpaceLevelUsingGet } from '@/api/spaceController.ts'
 import { useRoute, useRouter } from 'vue-router'
 import { SPACE_LEVEL_ENUM, SPACE_LEVEL_OPTIONS, SPACE_TYPE_ENUM, SPACE_TYPE_OPTIONS } from '@/constants/space.ts'
-import { formatSize } from '@/util'
+import { formatSize } from '../../utils'
 
 const router = useRouter()
 
